@@ -4,7 +4,8 @@
   "description": "AccessABLE provides a space where users can submit reviews of the accessibility of local businesses.",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.16.1"
+    "express": "^4.16.1",
+    "morgan": "^1.9.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
