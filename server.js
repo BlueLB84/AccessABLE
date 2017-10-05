@@ -7,7 +7,8 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/public/index.html').status(200);
+	res.sendFile(__dirname + '/public/index.html');
+	res.status(200);
 });
 
 let server;
