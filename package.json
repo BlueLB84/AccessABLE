@@ -1,0 +1,32 @@
+{
+  "name": "accessable",
+  "version": "1.0.0",
+  "description": "AccessABLE provides a space where users can submit reviews of the accessibility of local businesses.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlueLB84/AccessABLE.git"
+  },
+  "keywords": [
+    "nodeJS",
+    "accessibility",
+    "express",
+    "mocha",
+    "chai",
+    "travisCI"
+  ],
+  "author": "Lindsey Barbee-Vargas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BlueLB84/AccessABLE/issues"
+  },
+  "homepage": "https://github.com/BlueLB84/AccessABLE#readme"
+}
