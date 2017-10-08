@@ -3,6 +3,10 @@ const morgan = require('morgan');
 
 const app = express();
 
+const userReviewsRouter = require('../userReviewsRouter');
+const userProfileRouter = require('../userProfileRouter');
+
+
 app.use(morgan('common'));
 app.use(express.static('public'));
 
