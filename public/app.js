@@ -2,32 +2,99 @@ const MOCK_USER_REVIEWS = {
 	"userReviews": [
 		{
 			"id": "11111",
-			"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at.",
 			"userId": "aaaaa",
-			"userName": "John Doe",
-			"reviewDate": Date.now()
+			"user" : {
+				"firstName": "John",
+				"lastName" : "Doe"
+			},
+			"userName": "JohnDoe72",
+			"reviewDate": Date.now(),
+			"userRatings" : [
+				{"ramp" : true},
+				{"parkingSpaces" : true},
+				{"interiorNavigation" : true},
+				{"restroom" : true},
+				{"service" : true},
+				{"serviceAnimal" : true}
+			],
+			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
 		},
 		{
 			"id": "22222",
-			"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at.",
 			"userId": "bbbbb",
-			"userName": "Jane Doe",
-			"reviewDate": Date.now();
+			"user" : {
+				"firstName": "Jane",
+				"lastName" : "Doe"
+			},
+			"userName": "JaneDoe55",
+			"reviewDate": Date.now(),
+			"userRatings" : [
+				{"ramp" : true},
+				{"parkingSpaces" : true},
+				{"interiorNavigation" : true},
+				{"restroom" : true},
+				{"service" : true},
+				{"serviceAnimal" : false}
+			],
+			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
 		},
 		{
 			"id": "33333",
-			"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at.",
-			"userId": "cccccc",
-			"userName": "Jack Doe",
-			"reviewDate": Date.now();
+			"userId": "ccccc",
+			"user" : {
+				"firstName": "Jack",
+				"lastName" : "Doe"
+			},
+			"userName": "JackDoe93",
+			"reviewDate": Date.now(),
+			"userRatings" : [
+				{"ramp" : true},
+				{"parkingSpaces" : false},
+				{"interiorNavigation" : true},
+				{"restroom" : true},
+				{"service" : true},
+				{"serviceAnimal" : true}
+			],
+			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
 		},
 		{
 			"id": "44444",
-			"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at.",
 			"userId": "ddddd",
-			"userName": "Judy Doe",
-			"reviewDate": Date.now();
+			"user" : {
+				"firstName": "Jerry",
+				"lastName" : "Doe"
+			},
+			"userName": "JerrDoe88",
+			"reviewDate": Date.now(),
+			"userRatings" : [
+				{"ramp" : true},
+				{"parkingSpaces" : false},
+				{"interiorNavigation" : false},
+				{"restroom" : true},
+				{"service" : true},
+				{"serviceAnimal" : true}
+			],
+			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
 		},
+		{
+			"id": "55555",
+			"userId": "eeeee",
+			"user" : {
+				"firstName": "Jenine",
+				"lastName" : "Doe"
+			},
+			"userName": "JennyDoe2000",
+			"reviewDate": Date.now(),
+			"userRatings" : [
+				{"ramp" : true},
+				{"parkingSpaces" : false},
+				{"interiorNavigation" : true},
+				{"restroom" : false},
+				{"service" : true},
+				{"serviceAnimal" : true}
+			],
+			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
+		}
 	]
 };
 
