@@ -9,14 +9,15 @@ const MOCK_USER_REVIEWS = {
 			},
 			"userName": "JohnDoe72",
 			"reviewDate": Date.now(),
-			"userRatings" : [
-				{"ramp" : true},
-				{"parkingSpaces" : true},
-				{"interiorNavigation" : true},
-				{"restroom" : true},
-				{"service" : true},
-				{"serviceAnimal" : true}
-			],
+			"userRatings" : {
+				"ramp" : true,
+			  "parkingSpaces" : true,
+				"interiorNavigation" : true,
+				"restroom" : true,
+				"service" : true,
+				"serviceAnimal" : true
+			}
+			,
 			"reviewText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at."
 		},
 		{

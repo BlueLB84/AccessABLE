@@ -4,17 +4,38 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-const {ReviewsList} = require('../models');
+const {Review} = require('../models');
 
 // figure out data schema for reviews
 // ReviewsList.create('some key', 'some value');
 
 router.get('/', (req, res) => {
-	res.json(ReviewsList.get());
+	Review
+		.find()
+		.then(reviews => {
+			res.json({
+				reviews: reviews.map(
+					(review) => review.reviewApiRep())
+			});
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).json({message: 'Internal server error'});
+		});
+});
+
+router.get('/:id', (req, res) => {
+	Review
+		.findById(req.params.id)
+		.then(review => res.json(review.reviewApiRep()))
+		.catch(err => {
+			console.error(err);
+				res.status(500).json({message: 'Internal server error'});
+		});
 });
 
 router.post('/', jsonParser, (req, res) => {
-	const requiredFields = ["userId", "user", "userName", "userRatings"];
+	const requiredFields = ["userId", "user", "userName", "business", "userRatings"];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
 		if (!(field in req.body)) {
@@ -23,8 +44,21 @@ router.post('/', jsonParser, (req, res) => {
 			return res.status(400).send(message);
 		}
 	}
-	const item = ReviewsList.create(req.body.userId, req.body.user, req.body.userName, req.body.userRatings);
-	res.status(201).json(item);
+	Review
+		.create({
+			userId: req.body.userId, 
+			user: req.body.user, 
+			userName: req.body.userName, 
+			business: req.body.business,
+			userRatings: req.body.userRatings,
+			reviewText: req.body.reviewText
+		})
+		.then(
+			review => res.status(201).json(review.reviewApiRep()))
+		.catch(err => {
+			console.error(err);
+			res.status(500).json({message: 'Internal server error'});
+		});
 });
 
 router.put('/:id', jsonParser, (req, res) => {
@@ -42,18 +76,29 @@ router.put('/:id', jsonParser, (req, res) => {
 		console.error(message);
 		return res.status(400).send(message);
 	}
+
 	console.log(`Updating review with id: ${req.params.id}`);
-	const updatedReview = ReviewsList.update({
-		id: req.params.id,
-		userId: req.body.userId,
+	const toUpdate = {};
+	const updateableFields = ['userRatings', 'reviewText'];
+
+	updateableFields.forEach(field => {
+		if (field in req.body) {
+			toUpdate[field] = req.body[field];
+		}
 	});
-	res.status(204).end();
+
+	Review
+		.findByIdAndUpdate(req.params.id, {$set: toUpdate})
+		.then(review => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 router.delete('/id', (req, res) => {
-	ReviewsList.delete(req.params.id);
-	console.log(`Deleted review with id \`${req.params.id}\``);
-	res.status(204).end();
+	Review
+	.findByIdAndRemove(req.params.id)
+	.then(review => console.log(`Deleted review with id \`${req.params.id}\``);
+		res.status(204).end())
+	.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 module.exports = router;
