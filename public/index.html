@@ -12,8 +12,8 @@
 <header>
 	<h1>accessABLE</h1>
 	<ul>
-		<li><button type="button" class="button button--login">Login</button></li>
-		<li><button type="button" class="button button--review-header">Write A Review</button></li>
+		<li>Login</li>
+		<li>Write A Review</li>
 	</ul>
 </header>
 
@@ -22,18 +22,34 @@
 	<p>Search for a business. Review. Be an accessALLY. </p>
 
 	<section class="js-business-search">
-		<form action="#" method="get" class="js-business-search-form">
-
-		</form>
+		<div class="pac-card" id="pac-card">
+      <div>
+        <div id="title">
+          Autocomplete search
+        </div>
+        <div id="strict-bounds-selector" class="pac-controls">
+          <input type="checkbox" id="use-strict-bounds" value="">
+          <label for="use-strict-bounds">Strict Bounds</label>
+        </div>
+      </div>
+      <div id="pac-container">
+        <input id="pac-input" type="text"
+            placeholder="Enter a location">
+      </div>
+    </div>
+    <div id="map"></div>
+    <div id="infowindow-content">
+      <img src="" width="16" height="16" id="place-icon">
+      <span id="place-name"  class="title"></span><br>
+      <span id="place-address"></span>
+    </div>
 	</section>
-
-
 </main>
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="jquery.easy-autocomplete.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&libraries=places"></script>
     <script type="text/javascript" src="app.js"></script>
 </body>
 </html>
