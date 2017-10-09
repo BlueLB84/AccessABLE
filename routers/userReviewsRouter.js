@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const {Review} = require('../models');
-
-// figure out data schema for reviews
-// ReviewsList.create('some key', 'some value');
 
 router.get('/', (req, res) => {
 	Review
@@ -96,8 +96,7 @@ router.put('/:id', jsonParser, (req, res) => {
 router.delete('/id', (req, res) => {
 	Review
 	.findByIdAndRemove(req.params.id)
-	.then(review => console.log(`Deleted review with id \`${req.params.id}\``);
-		res.status(204).end())
+	.then(review => res.status(204).end())
 	.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 

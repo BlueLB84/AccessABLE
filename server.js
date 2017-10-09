@@ -8,7 +8,7 @@ const {PORT, DATABASE_URL} = require('./config');
 
 const app = express();
 
-const userReviewsRouter = require('../userReviewsRouter');
+const userReviewsRouter = require('./routers/userReviewsRouter');
 // const userProfileRouter = require('../userProfileRouter');
 
 

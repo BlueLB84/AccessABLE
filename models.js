@@ -17,7 +17,7 @@ const reviewSchema = mongoose.Schema({
 			zipcode: String
 		}
 	},
-	reviewDate: Date.now(),	
+	reviewDate: {type: Date, default: Date.now},	
 	userRatings: {
 		ramp: {type: Boolean, required: true},
 		parkingSpaces: {type: Boolean, required: true},
