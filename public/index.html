@@ -1,58 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://use.fontawesome.com/0f4f010bd8.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css"> 
-	<title>AccessABLE</title>
-</head>
-<body>
-<header>
-	<h1>accessABLE</h1>
-	<ul>
-		<li>Login</li>
-		<li>Write A Review</li>
-	</ul>
-</header>
-
-<main role="main">
-	<h2>Review the accessibility of local businesses</h2>
-	<p>Search for a business. Review. Be an accessALLY. </p>
-
-	<section class="js-business-search">
-		<div class="pac-card" id="pac-card">
-      <div>
-        <div id="title">
-          Autocomplete search
-        </div>
-        <div id="strict-bounds-selector" class="pac-controls">
-          <input type="checkbox" id="use-strict-bounds" value="">
-          <label for="use-strict-bounds">Strict Bounds</label>
-        </div>
-      </div>
-      <div id="pac-container">
-        <input id="pac-input" type="text"
-            placeholder="Enter a location">
-      </div>
-    </div>
+  <head>
+    <title>accessABLE</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="main.css">
+  </head>
+  <body>
+    <main role="main">
+			<h2>Review the accessibility of local businesses</h2>
+			<p>Search. Review. Become an accessALLY. </p>
+		</main>
+		
+		<input id="pac-input" class="controls" type="text" placeholder="Search for a business">
     <div id="map"></div>
-    <div id="infowindow-content">
-      <img src="" width="16" height="16" id="place-icon">
-      <span id="place-name"  class="title"></span><br>
-      <span id="place-address"></span>
-    </div>
-	</section>
-</main>
 
-
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&libraries=places"></script>
+    <div id="map-results"></div>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&libraries=places&callback=initAutocomplete"
+    async defer></script>
     <script type="text/javascript" src="app.js"></script>
-</body>
+  </body>
 </html>
-
-
-
