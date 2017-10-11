@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', jsonParser, (req, res) => {
-	const requiredFields = ["userId", "user", "userName", "business", "userRatings"];
+	const requiredFields = ["userId", "businessId", "userRatings"];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
 		if (!(field in req.body)) {
@@ -47,9 +47,7 @@ router.post('/', jsonParser, (req, res) => {
 	Review
 		.create({
 			userId: req.body.userId, 
-			user: req.body.user, 
-			userName: req.body.userName, 
-			business: req.body.business,
+			businessId: req.body.businessId, // Google Places Id
 			userRatings: req.body.userRatings,
 			reviewText: req.body.reviewText
 		})

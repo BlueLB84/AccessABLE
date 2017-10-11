@@ -8,15 +8,7 @@ const reviewSchema = mongoose.Schema({
 		lastName: {type: String, required: true}
 	},
 	userName: {type: String, required: true},
-	business: {
-		name: {type: String, required: true},
-		address: {
-			building: String,
-			coord: [String],
-			street: String,
-			zipcode: String
-		}
-	},
+	businessId: {type: String, required: true},
 	reviewDate: {type: Date, default: Date.now},	
 	userRatings: {
 		ramp: {type: Boolean, required: true},
@@ -35,7 +27,7 @@ reviewSchema.virtual('businessAddress').get(function() {
 reviewSchema.methods.reviewsApiRep = function() {
 	return {
 		id: this._id,
-		businessName: this.business.name,
+		businessId: this.businessId,
 		address: this.businessAddress,
 		userName: this.userName,
 		userRatings: this.userRatings,
