@@ -25,5 +25,13 @@ describe('Verify root url working', function() {
 				expect(res).to.be.html;
 				res.should.have.status(200);
 			});
-	});
+		});
+	
+	it('should return HTML on GET', function() {
+		return chai.request(app)
+			.get('/')
+			.then(function(res) {
+				expect(res).to.be.html;
+			});
+		});
 });
