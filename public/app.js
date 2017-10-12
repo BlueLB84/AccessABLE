@@ -1,88 +1,82 @@
 
 
-var markers = [];
+const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
 
 function initAutocomplete() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 42.3601, lng: -71.0589},
-    zoom: 13,
-    mapTypeId: 'roadmap'
-  });
 
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  
   // Listen for the event fired when the user selects a prediction and retrieve
   // more details for that place.
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
-    
-  let placeDetails = getPlaceIds(places);
-    
-    if (places.length == 0) {
-      return;
-    }
+  	console.log(places);
+  	const placeIds = getPlaceIds(places);
+    console.log(placeIds);
 
-    // Clear out the old markers.
-    markers.forEach(function(marker) {
-      marker.setMap(null);
-    });
-    markers = [];
+    displayPlaceInformation(places);
+		
+		if (places.length == 0) {
+		  return;
+		}
 
-    // For each place, get the icon, name and location.
-    var bounds = new google.maps.LatLngBounds();
-    places.forEach(function(place) {
-      if (!place.geometry) {
-        console.log("Returned place contains no geometry");
-        return;
-      }
-
-      var icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
-
-      // Create a marker for each place.
-      markers.push(new google.maps.Marker({
-        map: map,
-        icon: icon,
-        title: place.name,
-        id: place.id,
-        position: place.geometry.location,
-      }));
-
-
-      if (place.geometry.viewport) {
-        // Only geocodes have viewport.
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-    });
-    map.fitBounds(bounds);
+  // Bias the SearchBox results towards browser geolocation
+	  function geolocate() {
+	  	if (navigator.geolocation) {
+	  		navigator.geolocation.getCurrentPosition(function(position) {
+	  			var geolocation = {
+	  				lat: position.coords.latitude,
+	  				lng: position.coords.longitude
+	  			};
+	  			var circle = new google.maps.Circle({
+	  				center: geolocation,
+	  				radius: position.coords.accuracy
+	  			});
+	  			autocomplete.setBounds(circle.getBounds());
+	  		});
+	  	}
+	  }
   });
 }
 
 function getPlaceIds(places) {
 	let placeIds = [];
 	places.map(function(item) {
-		placeIds.push(item.id);
+		placeIds.push(item.place_id);
 	});
-	console.log(placeIds);
 	return placeIds;
 }
 
+function displayPlaceInformation(places) {
+	const placeInfoHTML = places.map((item, index) => {
+		return renderPlaceInformation(item);
+	});
+	$('#js-search-results').html(placeInfoHTML.join(''));
+}
+
+function renderPlaceInformation(place) {
+	const staticMapImgSrc = renderMap(place);
+
+	return `
+	<div>
+	<h2>${place.name}</h2>
+	<p>${place.formatted_address}</p>
+	<img src="${staticMapImgSrc}">
+	</div>
+	`;
+}
+
+function renderMap(place) {
+	console.log(place.formatted_address);
+	let addressArr = place.formatted_address.split(' ');
+	addressArr.splice(addressArr.length - 3, 3);
+	console.log(addressArr.join('+'));
+	let newAddressStr = addressArr.join('+');
+	let newAddress = newAddressStr.split(',+').join();
+	const staticMapImgURL = `${GOOGLE_STATIC_MAP_URL}${newAddress}`;
+	return staticMapImgURL;
+}
 
 
 
