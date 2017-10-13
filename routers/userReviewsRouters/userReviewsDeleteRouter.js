@@ -1,16 +1,13 @@
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const {Review} = require('./models/routers/userReviewsRouters');
+const {Review} = require('../../models');
 
-router.delete('/', (req, res) => {
+module.exports = function(req, res) {
 	Review
 	.findByIdAndRemove(req.params.id)
 	.then(review => res.status(204).end())
 	.catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+};
 
-module.exports = router;

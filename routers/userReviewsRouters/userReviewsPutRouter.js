@@ -1,15 +1,10 @@
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+const {Review} = require('../../models');
 
-const {Review} = require('./models/routers/userReviewsRouters');
-
-router.put('/', jsonParser, (req, res) => {
+module.exports = function(req, res) {
 	const requiredFields = ['id', 'userId'];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
@@ -39,6 +34,5 @@ router.put('/', jsonParser, (req, res) => {
 		.findByIdAndUpdate(req.params.id, {$set: toUpdate})
 		.then(review => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+};
 
-module.exports = router;

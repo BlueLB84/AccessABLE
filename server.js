@@ -8,8 +8,8 @@ const {PORT, DATABASE_URL} = require('./config');
 
 const app = express();
 
-const userReviewsRouter = require('./routers');
-// const userProfileRouter = require('./routers');
+const userReviewsRouter = require('./routers/userReviewsRouter');
+// const userProfileRouter = require('./routers/userProfileRouter');
 
 
 app.use(morgan('common'));

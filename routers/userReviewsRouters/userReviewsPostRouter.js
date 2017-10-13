@@ -1,15 +1,9 @@
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-
-const {Review} = require('./models/routers/userReviewsRouters');
-
-router.post('/', jsonParser, (req, res) => {
+const {Review} = require('../../models');
+module.exports = function(req, res) {
 	const requiredFields = ["userId", "businessId", "userRatings"];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
@@ -32,6 +26,4 @@ router.post('/', jsonParser, (req, res) => {
 			console.error(err);
 			res.status(500).json({message: 'Internal server error'});
 		});
-});
-
-module.exports = router;
+};
