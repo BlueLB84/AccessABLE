@@ -4,9 +4,12 @@
   "description": "AccessABLE provides a space where users can submit reviews of the accessibility of local businesses.",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.1",
-    "faker": "^4.1.0",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "mongoose": "^4.12.1",
+    "morgan": "^1.9.0",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
