@@ -126,7 +126,7 @@ describe('Reviews API resource', function() {
 				.findOne()
 				.then(function(_review) {
 					review = _review;
-					return chai.request(app).get(`/reviews/${review.Id}`);
+					return chai.request(app).get(`/reviews/${review.id}`);
 				})
 				.then(function(res) {
 					res.should.have.status(200);
@@ -154,7 +154,7 @@ describe('Reviews API resource', function() {
 				.then(function(review) {
 					resReview.id.should.equal(review.id);
 					resReview.businessId.should.equal(review.businessId);
-					resReview.userRatings.should.contain(review.userRatings.access);
+					resReview.userRatings.access.should.equal(review.userRatings.access);
 					resReview.reviewText.should.equal(review.reviewText);
 				});
 		});
@@ -175,11 +175,11 @@ describe('Reviews API resource', function() {
 					res.body.should.be.a('object');
 					res.body.should.include.keys(
 						'id', 'businessId', 'userRatings', 'reviewText', 'reviewDate');
-					res.body.id.should.equal(newReview.id);
+					res.body.id.should.not.be.null;
 					res.body.businessId.should.equal(newReview.businessId);
-					res.body.userRatings.should.equal(newReview.userRatings);
+					res.body.userRatings.should.be.a('object');
 					res.body.reviewText.should.equal(newReview.reviewText);
-					res.body.reviewDate.should.equal(newReview.reviewDate);
+					res.body.reviewDate.should.not.be.null;
 					return Review.findById(res.body.id);
 				})
 				.then(function(review) {
@@ -191,13 +191,13 @@ describe('Reviews API resource', function() {
 					review.userRatings.service.should.equal(newReview.userRatings.service);
 					review.userRatings.serviceAnimal.should.equal(newReview.userRatings.serviceAnimal);
 					review.reviewText.should.equal(newReview.reviewText);
-					review.reviewDate.should.equal(newReview.reviewDate);
+					review.reviewDate.should.not.be.null;
 				});
 		});
 	});
 
 	//  /reviews PUT  //
-	describe('reviews PUT input',function() {
+	describe('reviews PUT input', function() {
 
 		it('should update field sent over', function() {
 			const updateData = {
@@ -208,6 +208,7 @@ describe('Reviews API resource', function() {
 			.findOne()
 			.then(function(review) {
 				updateData.id = review.id;
+				updateData.userId = review.userId;
 				return chai.request(app)
 					.put(`/reviews/${review.id}`)
 					.send(updateData);

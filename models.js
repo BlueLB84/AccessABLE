@@ -24,7 +24,7 @@ const reviewSchema = mongoose.Schema({
 reviewSchema.virtual('businessAddress').get(function() {
 	return `${this.address.building} ${this.address.street}`.trim()});
 
-reviewSchema.methods.reviewsApiRep = function() {
+reviewSchema.methods.reviewApiRep = function() {
 	return {
 		id: this._id,
 		businessId: this.businessId,

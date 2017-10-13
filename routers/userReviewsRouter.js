@@ -17,7 +17,7 @@ router.get('/:id', userReviewsGetIdRouter);
 
 router.post('/', jsonParser, userReviewsPostRouter);
 router.put('/:id', jsonParser, userReviewsPutRouter);
-router.delete('/', userReviewsDeleteRouter);
+router.delete('/:id', userReviewsDeleteRouter);
 
 
 
