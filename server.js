@@ -29,51 +29,23 @@ app.use('*', function(req, res) {
 
 let server;
 
-// function runServer(databaseUrl=DATABASE_URL, port=PORT, callback) {
-// 	return new Promise((resolve, reject) => {
-// 		mongoose.connect(databaseUrl, {useMongoClient: true}, err => {
-// 			if (err) {
-// 				return reject(err);
-// 			}
-// 			server = app.listen(port, () => {
-// 				console.log(`Your app is listening on port ${port}`);
-// 				resolve();
-// 			})
-// 			.on('error', err => {
-// 				mongoose.disconnect();
-// 				reject(err);
-// 			});
-// 		});
-// 	});
-// }
-
-function runServer(databaseUrl=DATABASE_URL, port=PORT, callback) {
-  mongoose.Promise = global.Promise;
-  mongoose.connect(DATABASE_URL, { useMongoClient: true });
-  var db = mongoose.connection;
-  
-  server = app.listen(port, () => {
+function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+	return new Promise((resolve, reject) => {
+		mongoose.connect(databaseUrl, {useMongoClient: true}, err => {
+			if (err) {
+				return reject(err);
+			}
+			server = app.listen(port, () => {
 				console.log(`Your app is listening on port ${port}`);
 				resolve();
+			})
+			.on('error', err => {
+				mongoose.disconnect();
+				reject(err);
 			});
-
-  db.on("error", function(err) {
-    console.error("Failed to connect to database");
-    process.exit(1);
-  });
-
-  db.once("open", function() {
-    console.info("Connected to database");
-    callback();
-  });
-};
-
-// Wait for db connection, launch server
-runServer(function() {
-  app.listen(app.get("port"), function() {
-    console.log("Node app is running on port", app.get("port"));
-  });
-});
+		});
+	});
+}
 
 function closeServer() {
 	return mongoose.disconnect().then(() => {
