@@ -12,7 +12,52 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
+/// SEED DATA GENERATION AND DB INSERTION ///
+// search "coffee" for Acton coffee businesses
+function seedReviewData() {
+	console.info('seeding review data');
+	const seedData = [];
 
+	for(let i=1; i<=5; i++) {
+		seedData.push(generateReviewData());
+	}
+	return Review.insertMany(seedData); // returns a promise
+}
+
+function generateBusinessId() {
+	const businessIds = ['ChIJPTCWwiSX44kRrkTEFvDzbNs','ChIJxwF5bhWR44kR4hLara3TO2M', 'ChIJe6FlDG2R44kRvcpT-nzWQaY'];
+	return businessIds[Math.floor(Math.random() * businessIds.length)];
+}
+
+function generateBoolean() {
+	return Math.random() >= 0.5;
+}
+
+function generateReviewData() {
+	return{
+		businessId: generateBusinessId(),
+		userId: faker.random.uuid(),
+		userRatings: {
+			access: generateBoolean(),
+			parkingSpaces: generateBoolean(),
+			interiorNavigation: generateBoolean(),
+			restroom: generateBoolean(),
+			service: generateBoolean(),
+			serviceAnimal: generateBoolean()
+		},
+		reviewText: faker.lorem.sentence()
+	}
+}
+
+// delete db after each test
+function tearDownDb() {
+	console.warn('Deleting database');
+	return mongoose.connection.dropDatabase();
+}
+
+/// TESTS ///
+
+// accessABLE ROOT URL //
 describe('Verify root url working', function() {
 		before(function() {
 			return runServer();
@@ -38,37 +83,14 @@ describe('Verify root url working', function() {
 			});
 	});
 
-
-function seedReviewData() {
-	console.info('seeding review data');
-	const seedData = [];
-
-	for(let i=1; i<=10; i++) {
-		seedData.push(generateReviewData());
-	}
-	return Review.insertMany(seedData); // returns a promise
-}
-
-// generate object representing a review for db seed data
-// or request.body data
-function generateReviewData() {
-	return{
-		// faker schema
-	}
-}
-
-function tearDownDb() {
-	console.warn('Deleting database');
-	return mongoose.connection.dropDatabase();
-}
-
+//  /reviews API ENDPOINTS  //
 describe('Reviews API resource', function() {
 	before(function() {
 		return runServer(TEST_DATABASE_URL);
 	});
 
 	beforeEach(function() {
-		return seedReviewData(); // need to build out generateReviewData
+		return seedReviewData();
 	});
 
 	afterEach(function() {
@@ -79,14 +101,9 @@ describe('Reviews API resource', function() {
 		return closeServer();
 	});
 
+	//  /reviews and /reviews/:id GET  //
 	describe('reviews GET endpoint', function() {
-		before(function() {
-			return runServer();
-		});
-		after(function() {
-			return closeServer();
-		});
-
+		
 		it('should return all existing reviews', function() {
 			let res;
 			return chai.request(app)
@@ -103,28 +120,88 @@ describe('Reviews API resource', function() {
 			});
 
 		it('should return 200 status on review id GET', function() {
-			return chai.request(app)
-				.get('/reviews')
+			let review;
+			
+			return Review
+				.findOne()
+				.then(function(_review) {
+					review = _review;
+					return chai.request(app).get(`/reviews/${review.Id}`);
+				})
 				.then(function(res) {
 					res.should.have.status(200);
 				});
 		});
-	});
 
-	describe('reviews POST endpoint', function() {
-		
-		it('should add a new review', function() {
+		it('should return reviews with right fields', function() {
+			let resReview;
 			return chai.request(app)
-				.post('/reviews/new-review')
-				// build out
+				.get('/reviews')
+				.then(function(res) {
+					res.should.have.status(200);
+					res.should.be.json;
+					res.body.reviews.should.be.a('array');
+					res.body.reviews.should.have.length.of.at.least(1);
+
+					res.body.reviews.forEach(function(review) {
+						review.should.be.a('object');
+						review.should.include.keys(
+							'id', 'businessId', 'userRatings', 'reviewText', 'reviewDate');
+					});
+					resReview = res.body.reviews[0];
+					return Review.findById(resReview.id);
+				})
+				.then(function(review) {
+					resReview.id.should.equal(review.id);
+					resReview.businessId.should.equal(review.businessId);
+					resReview.userRatings.should.contain(review.userRatings.access);
+					resReview.reviewText.should.equal(review.reviewText);
+				});
 		});
 	});
 
+	//  /reviews POST  //
+	describe('reviews POST endpoint', function() {
+		
+		it('should add a new review', function() {
+			const newReview = generateReviewData();
+
+			return chai.request(app)
+				.post('/reviews')
+				.send(newReview)
+				.then(function(res) {
+					res.should.have.status(201);
+					res.should.be.json;
+					res.body.should.be.a('object');
+					res.body.should.include.keys(
+						'id', 'businessId', 'userRatings', 'reviewText', 'reviewDate');
+					res.body.id.should.equal(newReview.id);
+					res.body.businessId.should.equal(newReview.businessId);
+					res.body.userRatings.should.equal(newReview.userRatings);
+					res.body.reviewText.should.equal(newReview.reviewText);
+					res.body.reviewDate.should.equal(newReview.reviewDate);
+					return Review.findById(res.body.id);
+				})
+				.then(function(review) {
+					review.businessId.should.equal(newReview.businessId);
+					review.userRatings.access.should.equal(newReview.userRatings.access);
+					review.userRatings.parkingSpaces.should.equal(newReview.userRatings.parkingSpaces);
+					review.userRatings.interiorNavigation.should.equal(newReview.userRatings.interiorNavigation);
+					review.userRatings.restroom.should.equal(newReview.userRatings.restroom);
+					review.userRatings.service.should.equal(newReview.userRatings.service);
+					review.userRatings.serviceAnimal.should.equal(newReview.userRatings.serviceAnimal);
+					review.reviewText.should.equal(newReview.reviewText);
+					review.reviewDate.should.equal(newReview.reviewDate);
+				});
+		});
+	});
+
+	//  /reviews PUT  //
 	describe('reviews PUT input',function() {
 
-		it('should update fields sent over', function() {
+		it('should update field sent over', function() {
 			const updateData = {
-				// review properties to update with fake data
+				reviewText: 'This is a test'
 			};
 
 		return Review
@@ -132,7 +209,7 @@ describe('Reviews API resource', function() {
 			.then(function(review) {
 				updateData.id = review.id;
 				return chai.request(app)
-					.put(`/reviews/update-review/${review.id}`)
+					.put(`/reviews/${review.id}`)
 					.send(updateData);
 			})
 			.then(function(res) {
@@ -140,12 +217,12 @@ describe('Reviews API resource', function() {
 				return Review.findById(updateData.id);
 			})
 			.then(function(review) {
-				// build out what should equal what
-				// ex: restaurant.name.should.equal(updateData.name);
+				review.reviewText.should.equal(updateData.reviewText);
 			});
 		});
 	});
 
+	//  /reviews DELETE  //
 	describe('reviews DELETE endpoint', function() {
 
 		it('should delete a review by id', function() {
@@ -155,7 +232,7 @@ describe('Reviews API resource', function() {
 				.findOne()
 				.then(function(_review) {
 					review = _review;
-					return chai.request(app).delete(`/reviews/delete-review/${review.id}`);
+					return chai.request(app).delete(`/reviews/${review.id}`);
 				})
 				.then(function(res) {
 					res.should.have.status(204);
