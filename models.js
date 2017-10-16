@@ -7,7 +7,7 @@ const reviewSchema = mongoose.Schema({
 	// 	firstName: {type: String, required: true},
 	// 	lastName: {type: String, required: true}
 	// },
-	// userName: {type: String, required: true},
+	// username: {type: String, required: true},
 	businessId: {type: String, required: true},
 	reviewDate: {type: Date, default: Date.now},	
 	userRatings: {
