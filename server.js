@@ -8,8 +8,8 @@ const {PORT, DATABASE_URL} = require('./config');
 
 const app = express();
 
-const userReviewsRouter = require('./routers/userReviewsRouter');
-// const userProfileRouter = require('./routers/userProfileRouter');
+const reviewsRouter = require('./routers/reviewsRouter');
+// const userRouter = require('./routers/userRouter');
 
 
 app.use(morgan('common'));
@@ -20,8 +20,8 @@ app.get('/', (req, res) => {
 	res.status(200);
 });
 
-app.use('/reviews', userReviewsRouter);
-// app.use('/users', userProfileRouter);
+app.use('/reviews', reviewsRouter);
+// app.use('/users', userRouter);
 
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
