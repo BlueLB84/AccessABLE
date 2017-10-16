@@ -20,7 +20,6 @@ function initAutocomplete() {
 		if (places.length == 0) {
 		  return;
 		}
-// Bias the SearchBox results towards br
   });
   function geolocate() {
 	  	if (navigator.geolocation) {
