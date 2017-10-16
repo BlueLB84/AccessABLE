@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 mongoose.Promise = global.Promise;
 
@@ -9,19 +11,39 @@ const {PORT, DATABASE_URL} = require('./config');
 const app = express();
 
 const reviewsRouter = require('./routers/reviewsRouter');
-// const userRouter = require('./routers/userRouter');
+const userRouter = require('./routers/userRouter');
+const {router: authRouter, basicStrategy, jwtStrategy} = require('./auth');
 
+mongoose.Promise = global.Promise;
 
 app.use(morgan('common'));
 app.use(express.static('public'));
+
+// CORS
+app.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+	res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+	if (req.method === 'OPTIONS') {
+		return res.send(204);
+	}
+	next();
+});
+
+// Authentication
+app.use(passport.initialize());
+passport.use(basicStrategy);
+passport.use(jwtStrategy);
+
+// Routers
+app.use('/reviews', reviewsRouter);
+app.use('/users', userRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
 	res.status(200);
 });
-
-app.use('/reviews', reviewsRouter);
-// app.use('/users', userRouter);
 
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
