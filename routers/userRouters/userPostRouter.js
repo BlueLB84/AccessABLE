@@ -63,7 +63,7 @@ module.exports = function(req, res) {
 		});
 	}
 
-	let {username, password, firstName = '', lastName = ''} = req.body;
+	let {username, password, firstName = '', lastName = '', userBio = ''} = req.body;
 
 	firstName = firstName.trim();
 	lastName = lastName.trim();
@@ -86,11 +86,12 @@ module.exports = function(req, res) {
 				username,
 				password: hash,
 				firstName,
-				lastName
+				lastName,
+				userBio
 			});
 		})
 		.then(user => {
-			return res.status(201).json(user.apiRep());
+			return res.status(201).json(user.userApiRep());
 		})
 		.catch(err => {
 			if (err.reason === 'ValidationError') {

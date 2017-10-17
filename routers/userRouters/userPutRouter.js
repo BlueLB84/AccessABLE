@@ -5,22 +5,20 @@ mongoose.Promise = global.Promise;
 const {User} = require('../../user-models');
 
 module.exports = function(req, res) {
-	const requiredFields = ['userId', 'password'];
-	for (let i=0; i<requiredFields.length; i++) {
-		const field = requiredFields[i];
-		if (!(field in req.body)) {
-			const message = `Missing \`${field}\` in request body`;
+	const requiredField = 'username';
+		if (!('username' in req.body)) {
+			const message = `Missing username in request body`;
 			console.error(message);
 			return res.status(400).send(message);
 		}
 	}
-	if (req.params.userId !== req.body.userId) {
-		const message = (`Request path id (${req.params.userId}) and request body userId (${req.body.userId}) must match`);
+	if (req.params.username !== req.body.username) {
+		const message = (`Request path username (${req.params.username}) and request body username (${req.body.username}) must match`);
 		console.error(message);
 		return res.status(400).send(message);
 	}
 
-	console.log(`Updating user with userId: ${req.params.userId}`);
+	console.log(`Updating user with username: ${req.params.username}`);
 	const toUpdate = {};
 	const updateableField = 'userBio';
 
@@ -30,11 +28,8 @@ module.exports = function(req, res) {
 	
 
 	User
-		.findByIdAndUpdate(req.params.userId, {$set: toUpdate})
+		.findByIdAndUpdate(req.params.username, {$set: toUpdate})
 		.then(review => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 };
-
-// might need to add additional updatable fields
-// which id is required? id or userId?
 

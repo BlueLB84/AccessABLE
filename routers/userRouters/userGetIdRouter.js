@@ -6,7 +6,7 @@ const {User} = require('../../user-models');
 
 module.exports = function(req, res) {
 	User
-		.findById(req.params.id)
+		.findById(req.params.username)
 		.then(user => res.json(user.userApiRep()))
 		.then(res.status(200))
 		.catch(err => {
@@ -14,6 +14,3 @@ module.exports = function(req, res) {
 				res.status(500).json({message: 'Internal server error'});
 		});
 };
-
-// Edit to find by userId or username?
-// what middleware functions to get to this point?
