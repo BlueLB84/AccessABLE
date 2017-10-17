@@ -11,10 +11,10 @@ const userPostRouter = require('./userRouters/userPostRouter');
 const userPutRouter = require('./userRouters/userPutRouter');
 const userDeleteRouter = require('./userRouters/userDeleteRouter');
 
-router.get('/:id', userGetIdRouter);
+router.get('/:username', userGetIdRouter);
 router.post('/', jsonParser, userPostRouter);
-router.put('/:id', jsonParser, userPutRouter);
-router.delete('/:id', userDeleteRouter);
+router.put('/:username', jsonParser, userPutRouter);
+router.delete('/:username', userDeleteRouter);
 
 module.exports = router;
 
