@@ -1,13 +1,8 @@
 const mongoose = require('mongoose');
+const {User} = require('./user-models');
 
 const reviewSchema = mongoose.Schema({
-	//id : use uuid
-	userId: {type: String, required: true},
-	// user: {
-	// 	firstName: {type: String, required: true},
-	// 	lastName: {type: String, required: true}
-	// },
-	// username: {type: String, required: true},
+	username: {type: String, required: true},
 	businessId: {type: String, required: true},
 	reviewDate: {type: Date, default: Date.now},	
 	userRatings: {
@@ -24,10 +19,16 @@ const reviewSchema = mongoose.Schema({
 reviewSchema.virtual('businessAddress').get(function() {
 	return `${this.address.building} ${this.address.street}`.trim()});
 
+reviewSchema.virtual('username').get(function() {
+	return User.username;
+});
+
+
 reviewSchema.methods.reviewApiRep = function() {
 	return {
 		id: this._id,
 		businessId: this.businessId,
+		username: this.username,
 		userRatings: this.userRatings,
 		reviewText: this.reviewText,
 		reviewDate: this.reviewDate
