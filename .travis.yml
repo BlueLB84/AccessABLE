@@ -8,3 +8,5 @@ deploy:
   app: accessable
   on:
     repo: BlueLB84/AccessABLE
+notifications:
+  email: false
