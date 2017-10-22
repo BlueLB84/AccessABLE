@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+const loggedIn = require('../middlewares/is-logged-in-middleware');
 
 mongoose.Promise = global.Promise;
 
@@ -15,8 +16,8 @@ const reviewsDeleteRouter = require('./reviewsRouters/reviewsDeleteRouter');
 router.get('/', reviewsGetRouter);
 router.get('/:id', reviewsGetIdRouter);
 
-router.post('/', jsonParser, reviewsPostRouter);
-router.put('/:id', jsonParser, reviewsPutRouter);
-router.delete('/:id', reviewsDeleteRouter);
+router.post('/', [loggedIn, jsonParser], reviewsPostRouter);
+router.put('/:id', [loggedIn, jsonParser], reviewsPutRouter);
+router.delete('/:id', loggedIn, reviewsDeleteRouter);
 
 module.exports = router;

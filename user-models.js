@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.userApiRep = function() {
 	return {
+		userId: this._id,
 		username: this.username || '',
 		firstName: this.firstName || '',
 		lastName: this.lastName || '',

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {User} = require('./user-models');
 
 const reviewSchema = mongoose.Schema({
 	username: {type: String, required: true},
@@ -18,11 +17,6 @@ const reviewSchema = mongoose.Schema({
 
 reviewSchema.virtual('businessAddress').get(function() {
 	return `${this.address.building} ${this.address.street}`.trim()});
-
-reviewSchema.virtual('username').get(function() {
-	return User.username;
-});
-
 
 reviewSchema.methods.reviewApiRep = function() {
 	return {
