@@ -87,3 +87,40 @@ nav li {
 .staticImg {
   display: block;
 }
+
+/* LOGIN MODAL */
+
+.nav--login-modal {
+  position: absolute;
+  top: 30px;
+  left:  100px;
+  width: 500px;
+  border: 2px solid grey;
+  background-color: pink;
+}
+
+/* REGISTRATION MODAL */
+
+.nav--registration-modal {
+  position: absolute;
+  top: 30px;
+  left:  100px;
+  width: 500px;
+  border: 2px solid grey;
+  background-color: lightblue;
+}
+
+/* NAV LINKS */
+.nav-link {
+  display: inline-block;
+}
+
+.nav--logout {
+  display: none;
+}
+
+
+
+
+
+

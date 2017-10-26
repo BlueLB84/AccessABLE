@@ -45,6 +45,11 @@ app.get('/', (req, res) => {
 	res.status(200);
 });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
 });

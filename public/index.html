@@ -8,11 +8,59 @@
   </head>
   <body>
     <nav>
-    	<ul>
-    		<li>About</li>
-    		<li>Login</li>
-    	</ul>
+  		<ul>
+        <li class="nav-link nav--login js-nav-login">LOG IN</li>
+        <li class="nav-link nav--logout js-nav-logout"><span class="nav--welcome js-nav-welcome"></span>LOG OUT</li>
+      </ul>
+      
+      
+      <!-- LOGIN MODAL -->
+      <div class="nav--login-modal js-login-modal" hidden>
+        <h2>Login to accessABLE</h2>
+        <div id="login-form-messages"></div>
+        <form action="/auth/login" method="post" id="js-form-login">
+          <div class="login-input">
+            <label for="username-log">Username</label>
+            <input type="text" placeholder="Username" name="username" id="username-log" required>
+
+            <label for="password-log">Password</label>
+            <input type="password" placeholder="Password" name="password" id="password-log" required>
+
+            <button type="submit" class="button--login-submit">Login</button>
+            <button type="reset" class="button--login-cancel js-login-cancel">Cancel</button>
+          </div>
+
+          <div class="login-new-user">
+            <button type="button" class="button--new-user js-new-user">New accessABLE user?</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- NEW USER REGISTRATION -->
+      <div class="nav--registration-modal js-registration-modal" hidden>
+        <h2>Register for accessABLE</h2>
+        <div id="reg-form-messages"></div>
+        <form id="js-form-register" action="/users" method="post">
+          <div class="registration-input">
+            <label for="username-reg">Username</label>
+            <input type="text" placeholder="Username" name="username-reg" id="username-reg" required>
+
+            <label for="password-reg">Password</label>
+            <input type="password" placeholder="Password" name="password-reg" id="password-reg" required>
+
+            <label for="firstName">First Name</label>
+            <input type="text" placeholder="First Name" name="firstName" id="firstName" required>
+
+            <label for="lastName">Last Name</label>
+            <input type="text" placeholder="Last Name" name="lastName" id="lastName" required>
+
+            <button type="submit" class="button--login-submit js-register">Register</button>
+            <button type="reset" class="button--registration-cancel js-registration-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
     </nav>
+    
     <main role="main">
 			<h1>accessABLE</h1>
 			<h2>Review the accessibility of local businesses</h2>

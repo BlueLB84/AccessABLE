@@ -4,6 +4,7 @@ mongoose.Promise = global.Promise;
 
 const {User} = require('../../user-models');
 module.exports = function(req, res) {
+	console.log(req);
 	const requiredFields = ['username', 'password'];
 	const missingField = requiredFields.find(field => !(field in req.body));
 
