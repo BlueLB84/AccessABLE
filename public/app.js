@@ -232,39 +232,6 @@ $(document).ready(function() {
 
 
 
-// ROUTE Popstate Handler //
-// window.onpopstate = function(event) {
-// 	let change = false;
-	
-// 	if(document.location.pathname === '/log-in') {
-// 		STATE.route = 'login';
-// 		change = true;
-// 	} else if (document.location.pathname === '/#') {
-// 		STATE.route = 'logout';
-// 		change = true;
-// 	} else if (document.location.pathname === '/about') {
-// 		STATE.route = 'about'
-// 	} else if (document.location.pathname === '/search-results') {
-// 		STATE.route = 'search-results';
-// 		change = true;
-// 	} else if (document.location.pathname === `/${STATE.place_ID}`) {
-// 		STATE.route = 'single-place';
-// 		change = true;
-// 	} else if (document.location.pathname === `/review-${STATE.place_ID}`) {
-// 		STATE.route = 'review-questionnaire';
-// 		change = true;
-// 	} else if (document.location.pathname === `/location-review/${STATE.review_location}`) {
-// 		STATE.route = 'location-review';
-// 		change = true;
-// 	}
-
-// 	if(change === true) {
-// 		renderAccessABLE(STATE.route, PAGE_VIEWS);
-// 	};
-// };
-
-
-
 
 
 
