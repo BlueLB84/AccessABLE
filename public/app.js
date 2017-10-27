@@ -28,6 +28,7 @@ function initAutocomplete() {
 		  return;
 		}
   });
+
   function geolocate() {
 	  	if (navigator.geolocation) {
 	  		navigator.geolocation.getCurrentPosition(function(position) {
@@ -85,7 +86,7 @@ function renderPlaceInformation(place) {
 
 	return `
 	<div id="${place.place_id}">
-	<h2>${place.name}</h2>
+	<h2 class='place-name js-place-name'>${place.name}</h2>
 	<p>${place.formatted_address}</p>
 	<img src="${staticMapImgSrc}" class="staticImg">
 	<button class="review-start" type="button" ${STATE.IS_LOGGED_IN ? '' : 'hidden'}>REVIEW THIS BUSINESS</button>
@@ -179,8 +180,6 @@ $('#js-form-register').on('submit', event => {
 	    lastName: lastname
 	};
 
-	console.log(JSON.stringify(data));
-
 	$.ajax({
 	    type: 'POST',
 	    url: '/users',
@@ -224,6 +223,28 @@ $('.js-nav-logout').on('click', event => {
 	   }
 	});
 });
+
+
+// Handle single location view
+$('#js-search-results').on('click', '.js-place-name', event => {
+	event.preventDefault();
+	let placeID = $(event.currentTarget).parent().attr('id');
+	console.log(placeID);
+	// use placeID to get/post review answers to db
+})
+
+///// SET CURRENT SEARCH TERMS IN STATE OBJECT
+
+///// CREATE SECTION FOR SINGLE BUSINESS AND ITS REVIEWS
+
+///// ADD REVIEWS TO BUSINESS SEARCH RESULTS USING BUSINESS ID
+
+///// CREATE QUESTIONNAIRE .js-review-prompt
+
+///// POST QUESTIONNAIRE ANSWERS AND USERNAME TO /REVIEWS/:id
+
+///// GET REVIEWS FOR A LOCATION -- add db search for location
+
 
 
 $(document).ready(function() {
