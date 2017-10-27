@@ -4,6 +4,7 @@
   "description": "AccessABLE provides a space where users can submit reviews of the accessibility of local businesses.",
   "main": "server.js",
   "dependencies": {
+    "axios": "^0.17.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
@@ -11,6 +12,7 @@
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.10.8",
     "morgan": "^1.9.0",
+    "mustache": "^2.3.0",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
     "passport-jwt": "^3.0.0",
