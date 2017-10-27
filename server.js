@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -39,6 +40,17 @@ passport.use(jwtStrategy);
 app.use('/reviews', reviewsRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
+
+app.get('/details/test', function(req, res) {
+	var details = axios.get("https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&placeid=ChIJ77AxGGGR44kR-lxxEuJa0og")
+	details.then(response => {
+		res.json(response.data);
+	}).catch(e => {
+		console.log(e);
+	})
+})
+
+// res.render(mustacheTemplate, response.data);
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
