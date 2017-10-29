@@ -230,8 +230,9 @@ $('#js-search-results').on('click', '.js-place-name', event => {
 	event.preventDefault();
 	let placeID = $(event.currentTarget).parent().attr('id');
 	console.log(placeID);
-	// use placeID to get/post review answers to db
 })
+
+
 
 ///// SET CURRENT SEARCH TERMS IN STATE OBJECT
 
