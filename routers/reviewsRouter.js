@@ -14,7 +14,7 @@ const reviewsPutRouter = require('./reviewsRouters/reviewsPutRouter');
 const reviewsDeleteRouter = require('./reviewsRouters/reviewsDeleteRouter');
 
 router.get('/', reviewsGetRouter);
-router.get('/:id', reviewsGetIdRouter);
+router.get('/:place_id', reviewsGetIdRouter);
 
 router.post('/', [loggedIn, jsonParser], reviewsPostRouter);
 router.put('/:id', [loggedIn, jsonParser], reviewsPutRouter);

@@ -1,5 +1,4 @@
 require('dotenv').config();
-const axios = require('axios');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -17,10 +16,11 @@ const {router: authRouter, basicStrategy, jwtStrategy} = require('./auth');
 
 mongoose.Promise = global.Promise;
 
+app.set('index', './views');
+app.set('view engine', 'pug');
+
 app.use(morgan('common'));
 app.use(express.static('public'));
-
-
 
 // CORS
 app.use(function(req, res, next) {
@@ -43,16 +43,19 @@ app.use('/reviews', reviewsRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
 
-app.get('/details/test', function(req, res) {
-	var details = axios.get("https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&placeid=ChIJ77AxGGGR44kR-lxxEuJa0og")
-	details.then(response => {
-		res.json(response.data);
-	}).catch(e => {
-		console.log(e);
-	})
-})
-
-// res.render(mustacheTemplate, response.data);
+// app.get('/details/:place_id', function(req, res) {
+// 	console.log(req.params.place_id);
+// 	const GOOGLE_PLACE_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&placeid=";
+// 	var details = axios.get(`${GOOGLE_PLACE_DETAILS_URL}${req.params.place_id}`);
+// 	details.then(response => {
+// 		// res.json(response.data);
+// 		var data = response.data.result;
+// 		const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
+// 		res.render('index', { title: 'accessABLE', place_name: `${data.name}`, address: `${data.formatted_address}`, img_src: `${GOOGLE_STATIC_MAP_URL}${data.geometry.location.lat},${data.geometry.location.lng}`, img_title: `${data.name} static map` });
+// 	}).catch(e => {
+// 		console.log(e);
+// 	})
+// })
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');

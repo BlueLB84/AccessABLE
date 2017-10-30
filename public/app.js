@@ -18,6 +18,7 @@ function initAutocomplete() {
   var searchBox = new google.maps.places.SearchBox(input);
   
   searchBox.addListener('places_changed', function() {
+    STATE.search_terms = input.value;
     var places = searchBox.getPlaces();
   	console.log(places);
   	const placeIds = getPlaceIds(places);
@@ -86,10 +87,10 @@ function renderPlaceInformation(place) {
 
 	return `
 	<div id="${place.place_id}">
-	<h2 class='place-name js-place-name'>${place.name}</h2>
+	<a href="http://localhost:8080/reviews/${place.place_id}"><h2 class='place-name js-place-name'>${place.name}</h2></a>
 	<p>${place.formatted_address}</p>
 	<img src="${staticMapImgSrc}" class="staticImg">
-	<button class="review-start" type="button" ${STATE.IS_LOGGED_IN ? '' : 'hidden'}>REVIEW THIS BUSINESS</button>
+	<button class="review-start" type="button">REVIEW THIS BUSINESS</button>
 	<section class="review"><section>
 	</div>
 	`;
@@ -226,11 +227,12 @@ $('.js-nav-logout').on('click', event => {
 
 
 // Handle single location view
-$('#js-search-results').on('click', '.js-place-name', event => {
-	event.preventDefault();
-	let placeID = $(event.currentTarget).parent().attr('id');
-	console.log(placeID);
-})
+// $('#js-search-results').on('click', '.js-place-name', event => {
+// 	event.preventDefault();
+// 	let placeID = $(event.currentTarget).parent().attr('id');
+// 	console.log(placeID);
+// 	history.pushState({}, 'place-detail', `details/${placeID}`);
+// })
 
 
 
