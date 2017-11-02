@@ -2,22 +2,39 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 const passport = require('passport');
+const session = require('express-session');
+const app = express();
 
-mongoose.Promise = global.Promise;
+// Express Session
+var sess = {
+  secret: 'keyboard dog',
+  cookie: {}
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess));
 
 const {PORT, DATABASE_URL} = require('./config');
-
-const app = express();
 
 const reviewsRouter = require('./routers/reviewsRouter');
 const userRouter = require('./routers/userRouter');
 const {router: authRouter, basicStrategy, jwtStrategy} = require('./auth');
+const resultsRouter = require('./routers/resultsRouter');
 
 mongoose.Promise = global.Promise;
 
+// PUG templates
 app.set('index', './views');
 app.set('view engine', 'pug');
+
+
 
 app.use(morgan('common'));
 app.use(express.static('public'));
@@ -42,20 +59,7 @@ passport.use(jwtStrategy);
 app.use('/reviews', reviewsRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
-
-// app.get('/details/:place_id', function(req, res) {
-// 	console.log(req.params.place_id);
-// 	const GOOGLE_PLACE_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&placeid=";
-// 	var details = axios.get(`${GOOGLE_PLACE_DETAILS_URL}${req.params.place_id}`);
-// 	details.then(response => {
-// 		// res.json(response.data);
-// 		var data = response.data.result;
-// 		const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
-// 		res.render('index', { title: 'accessABLE', place_name: `${data.name}`, address: `${data.formatted_address}`, img_src: `${GOOGLE_STATIC_MAP_URL}${data.geometry.location.lat},${data.geometry.location.lng}`, img_title: `${data.name} static map` });
-// 	}).catch(e => {
-// 		console.log(e);
-// 	})
-// })
+app.use('/results', resultsRouter);
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
@@ -67,6 +71,7 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+// catch all other routess
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
 });

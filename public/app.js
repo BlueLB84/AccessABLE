@@ -2,7 +2,7 @@ const STATE = {
 	reviewStatements: ['The building is easy to enter and exit.', 'There is an adequate number of handicap parking spaces.', 'The service is positive and meets my needs.', 'The interior of the business is easy to navigate through.', 'The bathroom is accessible.', 'The businesss is service dog friendly.'],
 	current_question: 0,
 	data: null,
-	search_terms: null,
+	search_query: null,
 	place_ID: null,
 	route: 'login',
 	review_location: null,
@@ -18,16 +18,29 @@ function initAutocomplete() {
   var searchBox = new google.maps.places.SearchBox(input);
   
   searchBox.addListener('places_changed', function() {
-    STATE.search_terms = input.value;
-    var places = searchBox.getPlaces();
-  	console.log(places);
-  	const placeIds = getPlaceIds(places);
+  	var center = searchBox.getBounds().getCenter();
+    const lat = center.lat();
+    const lng = center.lng();
+    // var places = searchBox.getPlaces();
 
-    displayPlaceInformation(places);
-		
-		if (places.length == 0) {
-		  return;
-		}
+	var data = {
+		'query': input.value,
+		'lat': lat,
+		'lng': lng
+	};
+
+	$.ajax({
+	    method: 'GET',
+	    url: '/results',
+	    contentType: 'application/json',
+	    data: data,
+	    success : function(data) {
+	      displayPlaceInformation(data);
+	   },
+	   error: function (err){
+	   	console.log(err);
+	   }
+	});
   });
 
   function geolocate() {
@@ -48,20 +61,12 @@ function initAutocomplete() {
 geolocate();
 }
 
-function getPlaceIds(places) {
-	let placeIds = [];
-	places.map(function(item) {
-		placeIds.push(item.place_id);
-	});
-	return placeIds;
-}
-
 const PAGE_VIEWS = {
 	'login': $('.js-login-modal'),
 	'logout': $('.js-nav-logout'),
 	'about': $('.js-about'),
 	'search-results': $('.js-search-results'),
-	'single-place': $('.js-single-place'),
+	'single-result': $('.js-single-result'),
 	'review-questionnaire': $('.js-review-questionnaire'),
 	'location-reviews': $('.js-location-reviews')
 }
@@ -76,10 +81,11 @@ function renderAccessABLE(currentRoute, elements) {
 
 // Render and display search results
 function displayPlaceInformation(places) {
+	console.log(places);
 	const placeInfoHTML = places.map((item, index) => {
 		return renderPlaceInformation(item);
 	});
-	$('#js-search-results').html(placeInfoHTML.join(''));
+	$('.js-search-results').html(placeInfoHTML.join(''));
 }
 
 function renderPlaceInformation(place) {
@@ -87,7 +93,7 @@ function renderPlaceInformation(place) {
 
 	return `
 	<div id="${place.place_id}">
-	<a href="http://localhost:8080/reviews/${place.place_id}"><h2 class='place-name js-place-name'>${place.name}</h2></a>
+	<h2 class='place-name js-place-name'>${place.name}</h2>
 	<p>${place.formatted_address}</p>
 	<img src="${staticMapImgSrc}" class="staticImg">
 	<button class="review-start" type="button">REVIEW THIS BUSINESS</button>
@@ -97,14 +103,42 @@ function renderPlaceInformation(place) {
 }
 
 function renderMap(place) {
-	let latlng = `${place.geometry.location.lat()},${place.geometry.location.lng()}`;
+	let latlng = `${place.geometry.location.lat},${place.geometry.location.lng}`;
 	const staticMapImgURL = `${GOOGLE_STATIC_MAP_URL}${latlng}`;
 	return staticMapImgURL;
 }
 
+// Handle single location view
+$('.js-search-results').on('click', '.js-place-name', event => {
+	event.preventDefault();
+	let placeID = $(event.currentTarget).parent().attr('id');
+	$.ajax({
+	    type: 'GET',
+	    url:`/reviews/${placeID}`, 
+	    success: function(html) {
+	      $('.js-single-result').html(html);
+	   },
+	   error: function (err){
+	   	console.log(err);
+	   }
+	});
+	history.pushState({}, 'place-detail', `/reviews/${placeID}`);
+})
+
+
+
+
+
+
+
+
+
+
+
+
 // Code for review prompt //
 function handleReviewStart() {
-	$('#js-search-results').on('click', 'button.review-start', event => {
+	$('.js-search-results').on('click', 'button.review-start', event => {
 	event.preventDefault();
 	let reviewID = $(event.currentTarget).parent().attr('id');
 	console.log(reviewID);
@@ -135,7 +169,6 @@ $('#js-form-login').on('submit', event => {
 	   	$('#login-form-messages').append('<p>Invalid username or password</p>');
 	   }
 	});
-
 });
 
 function onLogin(usrname) {
@@ -204,10 +237,6 @@ $('.js-registration-cancel').on('click', event => {
 	$('.js-registration-modal').hide();
 });
 
-$(document).ready(function() {
-	handleReviewStart();
-});
-
 // AJAX call to logout
 $('.js-nav-logout').on('click', event => {
 	$.ajax({
@@ -224,19 +253,6 @@ $('.js-nav-logout').on('click', event => {
 	   }
 	});
 });
-
-
-// Handle single location view
-// $('#js-search-results').on('click', '.js-place-name', event => {
-// 	event.preventDefault();
-// 	let placeID = $(event.currentTarget).parent().attr('id');
-// 	console.log(placeID);
-// 	history.pushState({}, 'place-detail', `details/${placeID}`);
-// })
-
-
-
-///// SET CURRENT SEARCH TERMS IN STATE OBJECT
 
 ///// CREATE SECTION FOR SINGLE BUSINESS AND ITS REVIEWS
 
