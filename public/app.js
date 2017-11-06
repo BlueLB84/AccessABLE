@@ -4,7 +4,7 @@ const STATE = {
 	data: null,
 	search_query: null,
 	place_ID: null,
-	route: 'login',
+	route: 'home',
 	review_location: null,
 	IS_LOGGED_IN: false
 }
@@ -13,7 +13,6 @@ const STATE = {
 const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
 
 function initAutocomplete() {
-
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
   
@@ -35,7 +34,9 @@ function initAutocomplete() {
 	    contentType: 'application/json',
 	    data: data,
 	    success : function(data) {
-	      displayPlaceInformation(data);
+	    input.value = '';
+	    history.pushState({}, 'results', `/results`);
+	    displayPlaceInformation(data);
 	   },
 	   error: function (err){
 	   	console.log(err);
@@ -62,14 +63,30 @@ geolocate();
 }
 
 const PAGE_VIEWS = {
-	'login': $('.js-login-modal'),
+	'home': $('.js-home'),
 	'logout': $('.js-nav-logout'),
-	'about': $('.js-about'),
 	'search-results': $('.js-search-results'),
 	'single-result': $('.js-single-result'),
 	'review-questionnaire': $('.js-review-questionnaire'),
 	'location-reviews': $('.js-location-reviews')
 }
+
+window.onpopstate = function(event) {
+	let change = false;
+	if(document.location.pathname === '/') {
+			STATE.route = 'home';
+			change = true;
+		} else if(document.location.pathname === '/results') {
+			STATE.route = 'search-results';
+			change = true;
+		} else if(document.location.pathname === `/results/ + ${STATE.place_ID}`) {
+			STATE.route = 'single-result';
+			change = true;
+		}
+		if(change === true) {
+			renderAccessABLE(STATE.route, PAGE_VIEWS);
+		};
+	};
 
 // RENDER PROJECT PAGE
 function renderAccessABLE(currentRoute, elements) {
@@ -79,9 +96,9 @@ function renderAccessABLE(currentRoute, elements) {
 	elements[currentRoute].show();
 };
 
+
 // Render and display search results
 function displayPlaceInformation(places) {
-	console.log(places);
 	const placeInfoHTML = places.map((item, index) => {
 		return renderPlaceInformation(item);
 	});
@@ -100,40 +117,38 @@ function renderPlaceInformation(place) {
 	<section class="review"><section>
 	</div>
 	`;
-}
+};
 
 function renderMap(place) {
 	let latlng = `${place.geometry.location.lat},${place.geometry.location.lng}`;
 	const staticMapImgURL = `${GOOGLE_STATIC_MAP_URL}${latlng}`;
 	return staticMapImgURL;
-}
+};
 
 // Handle single location view
-$('.js-search-results').on('click', '.js-place-name', event => {
+
+// **** This needs to be reworked. pushState is not working and not hiding all search
+//  results when the title is clicked ** //
+function handleSingleResult() {
+	$('.js-search-results').on('click', '.js-place-name', event => {
 	event.preventDefault();
-	let placeID = $(event.currentTarget).parent().attr('id');
+	STATE.place_ID = $(event.currentTarget).parent().attr('id');
+	
 	$.ajax({
 	    type: 'GET',
-	    url:`/reviews/${placeID}`, 
+	    url:`/results/${STATE.place_ID}`, 
 	    success: function(html) {
+	      STATE.route = 'single-result';
+	      history.pushState({}, 'single-result', `/results/${STATE.place_ID}`);
+	      renderAccessABLE(STATE.route, PAGE_VIEWS);
 	      $('.js-single-result').html(html);
-	   },
-	   error: function (err){
+	    },
+	    error: function (err){
 	   	console.log(err);
-	   }
+	    }
+		});
 	});
-	history.pushState({}, 'place-detail', `/reviews/${placeID}`);
-})
-
-
-
-
-
-
-
-
-
-
+};
 
 
 // Code for review prompt //
@@ -142,7 +157,8 @@ function handleReviewStart() {
 	event.preventDefault();
 	let reviewID = $(event.currentTarget).parent().attr('id');
 	console.log(reviewID);
-	// use reviewID to post review answers to db
+	STATE.route = 'review-questionnaire';
+	renderAccessABLE(STATE.route, PAGE_VIEWS);
 	});
 }
 
@@ -267,7 +283,9 @@ $('.js-nav-logout').on('click', event => {
 
 
 $(document).ready(function() {
-
+	renderAccessABLE(STATE.route, PAGE_VIEWS);
+	handleSingleResult();
+	handleReviewStart();
 });
 
 
