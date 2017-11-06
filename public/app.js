@@ -1,11 +1,15 @@
 const STATE = {
-	reviewStatements: ['The building is easy to enter and exit.', 'There is an adequate number of handicap parking spaces.', 'The service is positive and meets my needs.', 'The interior of the business is easy to navigate through.', 'The bathroom is accessible.', 'The businesss is service dog friendly.'],
-	current_question: 0,
-	data: null,
-	search_query: null,
+	review_statements: ['The building is easy to enter and exit.', 'There is an adequate number of handicap parking spaces.', 'The service is positive and meets my needs.', 'The interior of the business is easy to navigate through.', 'The bathroom is accessible.', 'The businesss is service dog friendly.'],
+	review_answers: {
+		access: null,
+		parkingSpaces: null,
+		interiorNavigation: null,
+		restroom: null,
+		service: null,
+		serviceAnimal: null
+	},
 	place_ID: null,
 	route: 'home',
-	review_location: null,
 	IS_LOGGED_IN: false
 }
 
@@ -34,11 +38,11 @@ function initAutocomplete() {
 	    contentType: 'application/json',
 	    data: data,
 	    success : function(data) {
-	    input.value = '';
-	    history.pushState({}, 'results', `/results`);
-	    displayPlaceInformation(data);
-	   },
-	   error: function (err){
+		    input.value = '';
+		    displayPlaceInformation(data);
+		    historyPushState('results');
+	    },
+	    error: function (err){
 	   	console.log(err);
 	   }
 	});
@@ -62,40 +66,60 @@ function initAutocomplete() {
 geolocate();
 }
 
+window.onpopstate = function(event) {
+	let change = false;
+	const currentRoute = getCurrentRoute();
+	
+	if(currentRoute) {
+			STATE.route = currentRoute;
+			change = true;
+	}
+	if(change === true) {
+		renderAccessABLE(PAGE_VIEWS);
+	};
+};
+
+function getCurrentRoute() {
+	if(document.location.pathname === '/') {
+		$('#pac-input').show();
+		return 'home';
+	} else if(document.location.pathname === '/results') {
+		$('#pac-input').show();
+		return 'search-results';
+	} else if(document.location.pathname === `/results/${STATE.place_ID}`) {
+		$('#pac-input').hide();
+		return 'single-result';
+	} else if(document.location.pathname === `/review/${STATE.place_ID}`) {
+		$('#pac-input').hide();
+		return 'review-questionnaire';
+	} else {
+		return null;
+	}
+}
+
 const PAGE_VIEWS = {
 	'home': $('.js-home'),
 	'logout': $('.js-nav-logout'),
 	'search-results': $('.js-search-results'),
 	'single-result': $('.js-single-result'),
-	'review-questionnaire': $('.js-review-questionnaire'),
-	'location-reviews': $('.js-location-reviews')
-}
-
-window.onpopstate = function(event) {
-	let change = false;
-	if(document.location.pathname === '/') {
-			STATE.route = 'home';
-			change = true;
-		} else if(document.location.pathname === '/results') {
-			STATE.route = 'search-results';
-			change = true;
-		} else if(document.location.pathname === `/results/ + ${STATE.place_ID}`) {
-			STATE.route = 'single-result';
-			change = true;
-		}
-		if(change === true) {
-			renderAccessABLE(STATE.route, PAGE_VIEWS);
-		};
-	};
+	'review-questionnaire': $('.js-review-questionnaire')
+};
 
 // RENDER PROJECT PAGE
-function renderAccessABLE(currentRoute, elements) {
+function renderAccessABLE(elements) {
+	const currentRoute = getCurrentRoute();
+
 	Object.keys(elements).forEach(function(route) {
 		elements[route].hide();
 	});
 	elements[currentRoute].show();
 };
 
+// Handle history.pushState
+function historyPushState(route) {
+	history.pushState({}, null, route);
+	renderAccessABLE(PAGE_VIEWS);
+}
 
 // Render and display search results
 function displayPlaceInformation(places) {
@@ -125,10 +149,8 @@ function renderMap(place) {
 	return staticMapImgURL;
 };
 
-// Handle single location view
 
-// **** This needs to be reworked. pushState is not working and not hiding all search
-//  results when the title is clicked ** //
+// Handle single location view
 function handleSingleResult() {
 	$('.js-search-results').on('click', '.js-place-name', event => {
 	event.preventDefault();
@@ -138,12 +160,10 @@ function handleSingleResult() {
 	    type: 'GET',
 	    url:`/results/${STATE.place_ID}`, 
 	    success: function(html) {
-	      STATE.route = 'single-result';
-	      history.pushState({}, 'single-result', `/results/${STATE.place_ID}`);
-	      renderAccessABLE(STATE.route, PAGE_VIEWS);
+	      historyPushState(`/results/${STATE.place_ID}`);
 	      $('.js-single-result').html(html);
 	    },
-	    error: function (err){
+	    error: function (err) {
 	   	console.log(err);
 	    }
 		});
@@ -151,16 +171,50 @@ function handleSingleResult() {
 };
 
 
-// Code for review prompt //
+// Handle review questionnaire view //
 function handleReviewStart() {
 	$('.js-search-results').on('click', 'button.review-start', event => {
 	event.preventDefault();
-	let reviewID = $(event.currentTarget).parent().attr('id');
-	console.log(reviewID);
-	STATE.route = 'review-questionnaire';
-	renderAccessABLE(STATE.route, PAGE_VIEWS);
+	STATE.place_ID = $(event.currentTarget).parent().attr('id');
+	historyPushState(`/review/${STATE.place_ID}`);
 	});
 }
+
+function handleReviewStartSingleView() {
+	$('.js-single-result').on('click', 'button.review-start', event => {
+	event.preventDefault();
+	historyPushState(`/review/${STATE.place_ID}`);
+	});
+};
+
+function handleReviewSubmit(businessID) {
+	const answers = STATE.review_answers;
+	const data = {
+		'userId': 'adminlbv',
+		'businessId': `${STATE.review_ID}`,
+		'userRatings': {
+			access: answers.access,
+			parkingSpaces: answers.parkingSpaces,
+			interiorNavigation: answers.interiorNavigation,
+			restroom: answers.restroom,
+			service: answers.service,
+			serviceAnimal: answers.serviceAnimal
+		}
+	};
+
+	$.ajax({
+		type: 'POST',
+		url: '/reviews',
+		contentType: 'application/json',
+	    data: data,
+		success: function() {
+			console.log('successful review POST');
+		},
+		error: function(err) {
+			console.log(err);
+		}
+	});
+};
 
 // Launch login modal
 $('nav').on('click', '.js-nav-login', event => {
@@ -270,7 +324,6 @@ $('.js-nav-logout').on('click', event => {
 	});
 });
 
-///// CREATE SECTION FOR SINGLE BUSINESS AND ITS REVIEWS
 
 ///// ADD REVIEWS TO BUSINESS SEARCH RESULTS USING BUSINESS ID
 
@@ -281,11 +334,11 @@ $('.js-nav-logout').on('click', event => {
 ///// GET REVIEWS FOR A LOCATION -- add db search for location
 
 
-
 $(document).ready(function() {
-	renderAccessABLE(STATE.route, PAGE_VIEWS);
+	renderAccessABLE(PAGE_VIEWS);
 	handleSingleResult();
 	handleReviewStart();
+	handleReviewStartSingleView();
 });
 
 
