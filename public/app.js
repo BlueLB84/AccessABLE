@@ -9,6 +9,7 @@ const STATE = {
 		serviceAnimal: null
 	},
 	place_ID: null,
+	review_place_name: null,
 	route: 'home',
 	IS_LOGGED_IN: false
 }
@@ -175,17 +176,57 @@ function handleSingleResult() {
 function handleReviewStart() {
 	$('.js-search-results').on('click', 'button.review-start', event => {
 	event.preventDefault();
+	STATE.review_place_name = $(event.currentTarget).closest('h2.js-place-name').text();
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
 	historyPushState(`/review/${STATE.place_ID}`);
+	
+	const reviewQuestionnaireHTML = `
+	<h2>${STATE.review_place_name}</h2>
+	<form name="review-questionnaire">
+		${displayReviewQuestionnaire().join(' ')}
+		<button type="submit" class="review-submit js-review-submit">SUBMIT REVIEW</button>
+	</form>`;
+
+	$('.js-review-questionnaire').html(reviewQuestionnaireHTML);
 	});
 }
 
 function handleReviewStartSingleView() {
 	$('.js-single-result').on('click', 'button.review-start', event => {
 	event.preventDefault();
+	STATE.review_place_name = $(event.currentTarget).parent().closest('h2.js-place-name').text();
 	historyPushState(`/review/${STATE.place_ID}`);
 	});
+	
+	const reviewQuestionnaireHTML = `
+	<h2>${STATE.review_place_name}</h2>
+	<form name="review-questionnaire">
+		${displayReviewQuestionnaire().join(' ')}
+		<button type="submit" class="review-submit js-review-submit">SUBMIT REVIEW</button>
+	</form>`;
+
+	$('.js-review-questionnaire').html(reviewQuestionnaireHTML);
 };
+
+function displayReviewQuestionnaire() {
+	let reviewBlocks = [];
+	for(let i = 0; i < STATE.review_statements.length; i++) {
+		reviewBlocks.push(renderReviewQuestionnaire(i));
+	}
+	return reviewBlocks;
+}
+
+function renderReviewQuestionnaire(index) {
+	return `
+        <fieldset class="review-answers">
+        	<legend>${STATE.review_statements[index]}</legend>
+        	<ul class="questionnaire-radios">
+	        	<li><input type="radio" id="true${index}" value="true" name="questionnaire-boolean${index}" class="questionnaire-boolean" required/><label for="${index}-true">TRUE</label></li>
+	        	<li><input type="radio" id="false${index}" value="false" name="questionnaire-boolean${index}" class="questionnaire-boolean" required/><label for="${index}-false">FALSE</label></li>
+        	</ul>
+        </fieldset>
+	`
+}
 
 function handleReviewSubmit(businessID) {
 	const answers = STATE.review_answers;
