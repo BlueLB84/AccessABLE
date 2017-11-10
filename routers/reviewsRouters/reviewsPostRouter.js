@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 
 const {Review} = require('../../models');
 module.exports = function(req, res) {
-	const requiredFields = ['userId', 'businessId', 'userRatings'];
+	const requiredFields = ['username', 'businessId', 'userRatings'];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
 		if (!(field in req.body)) {
@@ -15,7 +15,7 @@ module.exports = function(req, res) {
 	}
 	Review
 		.create({
-			userId: req.body.userId, 
+			username: req.body.username, 
 			businessId: req.body.businessId, // Google Places Id
 			userRatings: req.body.userRatings,
 			reviewText: req.body.reviewText
