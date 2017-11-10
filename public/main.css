@@ -126,6 +126,13 @@ nav ul {
 /* QUESTIONNAIRE BUTTONS */
 .questionnaire-radios li {
   list-style-type: none;
+  display: inline-block;
+}
+
+.answer-button {
+  width: 40px;
+  height: 20px;
+  border: 1px solid black;
 }
 
 

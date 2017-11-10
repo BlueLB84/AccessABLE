@@ -1,13 +1,7 @@
 const STATE = {
 	review_statements: ['The building is easy to enter and exit.', 'There is an adequate number of handicap parking spaces.', 'The service is positive and meets my needs.', 'The interior of the business is easy to navigate through.', 'The bathroom is accessible.', 'The businesss is service dog friendly.'],
-	review_answers: {
-		access: null,
-		parkingSpaces: null,
-		interiorNavigation: null,
-		restroom: null,
-		service: null,
-		serviceAnimal: null
-	},
+	review_answers: [],
+	current_question: 0,
 	place_ID: null,
 	review_place_name: null,
 	route: 'home',
@@ -18,21 +12,23 @@ const STATE = {
 const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
 
 function initAutocomplete() {
+
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
   
   searchBox.addListener('places_changed', function() {
-  	var center = searchBox.getBounds().getCenter();
-    const lat = center.lat();
-    const lng = center.lng();
-    // var places = searchBox.getPlaces();
-
-	var data = {
-		'query': input.value,
-		'lat': lat,
-		'lng': lng
+  	
+    var data = {
+		'query': input.value,	
 	};
+  	
+  	if(searchBox.getBounds()) {
+  		var center = searchBox.getBounds().getCenter();
 
+  		data.lat = center.lat();
+  		data.lng = center.lng();
+  	}; 
+   
 	$.ajax({
 	    method: 'GET',
 	    url: '/results',
@@ -61,9 +57,12 @@ function initAutocomplete() {
 	  				radius: position.coords.accuracy
 	  			});
 	  			searchBox.setBounds(circle.getBounds());
+	  			$('#pac-input').removeAttr('disabled');
+	  		}, function(err) {
+	  			$('#pac-input').removeAttr('disabled');
 	  		});
 	  	}
-	  }
+	  } 
 geolocate();
 }
 
@@ -103,7 +102,6 @@ const PAGE_VIEWS = {
 	'logout': $('.js-nav-logout'),
 	'search-results': $('.js-search-results'),
 	'single-result': $('.js-single-result'),
-	'review-questionnaire': $('.js-review-questionnaire')
 };
 
 // RENDER PROJECT PAGE
@@ -124,6 +122,11 @@ function historyPushState(route) {
 
 // Render and display search results
 function displayPlaceInformation(places) {
+	if(places.length === 0) {
+		$('.js-search-results').html('Could not find results. Try a more specific search.  For example: "pizza near Boston"');
+		return;
+	} 
+
 	const placeInfoHTML = places.map((item, index) => {
 		return renderPlaceInformation(item);
 	});
@@ -135,10 +138,10 @@ function renderPlaceInformation(place) {
 
 	return `
 	<div id="${place.place_id}">
-	<h2 class='place-name js-place-name'>${place.name}</h2>
+	<h2 class='place-name js-place-name' data-anchor="top">${place.name}</h2>
 	<p>${place.formatted_address}</p>
 	<img src="${staticMapImgSrc}" class="staticImg">
-	<button class="review-start" type="button">REVIEW THIS BUSINESS</button>
+	<button class="review-start" type="button" data-anchor="review">REVIEW THIS BUSINESS</button>
 	<section class="review"><section>
 	</div>
 	`;
@@ -153,16 +156,20 @@ function renderMap(place) {
 
 // Handle single location view
 function handleSingleResult() {
-	$('.js-search-results').on('click', '.js-place-name', event => {
+	$('.js-search-results').on('click', '.js-place-name, button.review-start', event => {
 	event.preventDefault();
+	STATE.current_question = 0;
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
-	
+	const anchorHash = $(event.currentTarget).data('anchor');
+
+
 	$.ajax({
 	    type: 'GET',
 	    url:`/results/${STATE.place_ID}`, 
 	    success: function(html) {
-	      historyPushState(`/results/${STATE.place_ID}`);
-	      $('.js-single-result').html(html);
+	      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
+	      $('.js-single-result').prepend(html);
+	      $('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID));
 	    },
 	    error: function (err) {
 	   	console.log(err);
@@ -172,40 +179,22 @@ function handleSingleResult() {
 };
 
 
-// Handle review questionnaire view //
-function handleReviewStart() {
-	$('.js-search-results').on('click', 'button.review-start', event => {
-	event.preventDefault();
-	STATE.review_place_name = $(event.currentTarget).closest('h2.js-place-name').text();
-	STATE.place_ID = $(event.currentTarget).parent().attr('id');
-	historyPushState(`/review/${STATE.place_ID}`);
-	
-	const reviewQuestionnaireHTML = `
-	<h2>${STATE.review_place_name}</h2>
+// QUESTIONNAIRE //
+function reviewQuestionnaireTemplate(placeId) {
+	const reviewBlocks = displayReviewQuestionnaire();
+
+	if(STATE.current_question === STATE.review_statements.length) {
+		console.log(STATE.review_answers);
+		handleReviewSubmit(placeId);
+		$('.js-review-questionnaire').html("Your review has been submitted!");
+	} else {
+		return `
+	<h2 id="review">Your accessABLE Review</h2>
+	<p>Select YES or NO for each of the following statements:</p>
 	<form name="review-questionnaire">
-		${displayReviewQuestionnaire().join(' ')}
-		<button type="submit" class="review-submit js-review-submit">SUBMIT REVIEW</button>
+		${reviewBlocks[STATE.current_question]}
 	</form>`;
-
-	$('.js-review-questionnaire').html(reviewQuestionnaireHTML);
-	});
-}
-
-function handleReviewStartSingleView() {
-	$('.js-single-result').on('click', 'button.review-start', event => {
-	event.preventDefault();
-	STATE.review_place_name = $(event.currentTarget).parent().closest('h2.js-place-name').text();
-	historyPushState(`/review/${STATE.place_ID}`);
-	});
-	
-	const reviewQuestionnaireHTML = `
-	<h2>${STATE.review_place_name}</h2>
-	<form name="review-questionnaire">
-		${displayReviewQuestionnaire().join(' ')}
-		<button type="submit" class="review-submit js-review-submit">SUBMIT REVIEW</button>
-	</form>`;
-
-	$('.js-review-questionnaire').html(reviewQuestionnaireHTML);
+	};
 };
 
 function displayReviewQuestionnaire() {
@@ -218,28 +207,42 @@ function displayReviewQuestionnaire() {
 
 function renderReviewQuestionnaire(index) {
 	return `
-        <fieldset class="review-answers">
+        <fieldset class="review-answers" id=${index}>
         	<legend>${STATE.review_statements[index]}</legend>
         	<ul class="questionnaire-radios">
-	        	<li><input type="radio" id="true${index}" value="true" name="questionnaire-boolean${index}" class="questionnaire-boolean" required/><label for="${index}-true">TRUE</label></li>
-	        	<li><input type="radio" id="false${index}" value="false" name="questionnaire-boolean${index}" class="questionnaire-boolean" required/><label for="${index}-false">FALSE</label></li>
+	        	<li><div class="js-answer-button answer-button review-true"><input type="radio" id="true${index}" value="true" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-true">YES</label></div></li>
+	        	<li><div class="js-answer-button answer-button review-false"><input type="radio" id="false${index}" value="false" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-false">NO</label></div></li>
         	</ul>
         </fieldset>
 	`
 }
 
-function handleReviewSubmit(businessID) {
+$('.js-single-result').on('click', '.js-answer-button', event => {
+	event.preventDefault();
+	event.stopPropagation();
+	const reviewAnswer = $(event.currentTarget).parent().find('input[name="questionnaire-boolean"]').prop('checked', true).val();
+	STATE.review_answers.push(reviewAnswer);
+	STATE.current_question++;
+	nextReviewStatement();
+});
+
+function nextReviewStatement() {
+	const reviewQuestion = reviewQuestionnaireTemplate(STATE.place_ID);
+	$('.js-review-questionnaire').html(reviewQuestion);
+};
+
+function handleReviewSubmit(placeId) {
 	const answers = STATE.review_answers;
 	const data = {
-		'userId': 'adminlbv',
-		'businessId': `${STATE.review_ID}`,
+		'username': 'adminlbv',
+		'businessId': placeId,
 		'userRatings': {
-			access: answers.access,
-			parkingSpaces: answers.parkingSpaces,
-			interiorNavigation: answers.interiorNavigation,
-			restroom: answers.restroom,
-			service: answers.service,
-			serviceAnimal: answers.serviceAnimal
+			access: answers[0],
+			parkingSpaces: answers[1],
+			interiorNavigation: answers[2],
+			restroom: answers[3],
+			service: answers[4],
+			serviceAnimal: answers[5]
 		}
 	};
 
@@ -247,7 +250,7 @@ function handleReviewSubmit(businessID) {
 		type: 'POST',
 		url: '/reviews',
 		contentType: 'application/json',
-	    data: data,
+	    data: JSON.stringify(data),
 		success: function() {
 			console.log('successful review POST');
 		},
@@ -378,8 +381,6 @@ $('.js-nav-logout').on('click', event => {
 $(document).ready(function() {
 	renderAccessABLE(PAGE_VIEWS);
 	handleSingleResult();
-	handleReviewStart();
-	handleReviewStartSingleView();
 });
 
 
