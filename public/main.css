@@ -114,6 +114,12 @@ nav ul {
 
 /* RESULTS display */
 
+.fa.fa-spinner.fa-pulse {
+  color: purple;
+  margin-top: 10px;
+  /* inside full-screen div with transparent background */
+}
+
 .staticImg {
   display: block;
 }

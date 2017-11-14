@@ -11,7 +11,7 @@ const {JWT_SECRET} = require('../config');
 const basicStrategy = new BasicStrategy((username, password, callback) => {
 	let user;
 	User
-	.findOne({username})
+	.findOne({username: username})
 	.then(_user => {
 		user = _user;
 		if (!user) {
