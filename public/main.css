@@ -114,10 +114,19 @@ nav ul {
 
 /* RESULTS display */
 
-.fa.fa-spinner.fa-pulse {
+.fa-spin-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.2);
   color: purple;
-  margin-top: 10px;
-  /* inside full-screen div with transparent background */
 }
 
 .staticImg {

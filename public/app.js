@@ -108,7 +108,7 @@ const PAGE_VIEWS = {
 	'home': $('.js-home'),
 	'logout': $('.js-nav-logout'),
 	'search-results': $('.js-search-results'),
-	'single-result': $('.js-single-result'),
+	'single-result': $('.js-single-result-container'),
 };
 
 // RENDER PROJECT PAGE
@@ -142,14 +142,14 @@ function displayPlaceInformation(places) {
 
 function renderPlaceInformation(place) {
 	const staticMapImgSrc = renderMap(place);
+	const reviewPercentages = renderReviewPercentages(place.place_id);
 
 	return `
 	<div id="${place.place_id}">
 	<h2 class='place-name js-place-name' data-anchor="top">${place.name}</h2>
 	<p>${place.formatted_address}</p>
 	<img src="${staticMapImgSrc}" class="staticImg">
-	<button class="review-start" type="button" data-anchor="review">REVIEW THIS BUSINESS</button>
-	<section class="review"><section>
+	<section class="js-review-percentages">${reviewPercentages}<section>
 	</div>
 	`;
 };
@@ -160,6 +160,11 @@ function renderMap(place) {
 	return staticMapImgURL;
 };
 
+function renderReviewPercentages(place) {
+	return 'ICON and % PLACEHOLDER';
+}
+
+// <button class="review-start" type="button" data-anchor="review">REVIEW THIS BUSINESS</button>
 
 // Handle single location view
 function handleSingleResult() {
@@ -169,21 +174,35 @@ function handleSingleResult() {
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
 	const anchorHash = $(event.currentTarget).data('anchor');
 
-
-	$.ajax({
-	    type: 'GET',
-	    url:`/results/${STATE.place_ID}`, 
-	    success: function(html) {
-	      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
-	      $('.js-single-result').prepend(html);
-	      $('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID));
-	    },
-	    error: function (err) {
-	   	console.log(err);
-	    }
+		$.ajax({
+		    type: 'GET',
+		    url:`/results/${STATE.place_ID}`, 
+		    success: function(html) {
+		      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
+		      $('.js-single-result').html(html);
+		      if(STATE.IS_LOGGED_IN) {
+		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID));
+		    } else {
+		    	$('.js-review-questionnaire').html(loginToReview());
+		    	$('.js-review-questionnaire .js-login-to-review').focus();
+		    	}
+		    },
+		    error: function (err) {
+		   	console.log(err);
+		    }
 		});
 	});
 };
+
+// LINK to LOGIN in order to Review the business
+function loginToReview() {
+	return `<button type="button" class="js-login-to-review">Please LOG IN to review this business</button>`
+};
+
+$('.js-review-questionnaire').on('click', '.js-login-to-review', event => {
+	$('.js-login-modal').show();
+	$('#username-log').focus();
+});
 
 
 // QUESTIONNAIRE //
