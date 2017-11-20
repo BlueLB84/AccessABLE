@@ -41,7 +41,7 @@ module.exports = function(req, res) {
 		});
 	}
 
-	const sizedFields = {username: {min: 1}, password: {min: 10, max: 72}};
+	const sizedFields = {username: {min: 3}, password: {min: 10, max: 72}};
 	const tooSmallField = Object.keys(sizedFields).find(
 		field =>
 			'min' in sizedFields[field] &&
@@ -58,8 +58,8 @@ module.exports = function(req, res) {
 			code: 422,
 			reason: 'ValidationError',
 			message: tooSmallField
-				? `Must be at least ${sizedFields[tooSmallField].min} characters long`
-				: `Must be at most ${sizedFields[tooLargeField].max} characters long`,
+				? `must be at least ${sizedFields[tooSmallField].min} characters long`
+				: `must be at most ${sizedFields[tooLargeField].max} characters long`,
 			location: tooSmallField || tooLargeField
 		});
 	}
@@ -76,7 +76,7 @@ module.exports = function(req, res) {
 				return Promise.reject({
 					code: 422,
 					reason: 'ValidationError',
-					message: 'Username already taken',
+					message: 'Username is already taken.',
 					location: 'username'
 				});
 			}

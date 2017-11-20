@@ -16,7 +16,7 @@ const userDeleteRouter = require('./userRouters/userDeleteRouter');
 router.get('/:username', passport.authenticate('jwt', {session: false}), userGetIdRouter);
 router.post('/', jsonParser, userPostRouter);
 router.put('/:username', jsonParser, userPutRouter);
-router.delete('/:username', userDeleteRouter);
+router.delete('/:userid', userDeleteRouter);
 
 module.exports = router;
 
