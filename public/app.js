@@ -3,7 +3,6 @@ const STATE = {
 	review_answers: [],
 	current_question: 0,
 	place_ID: null,
-	review_place_name: null,
 	route: 'home',
 	IS_LOGGED_IN: false
 }
@@ -92,13 +91,11 @@ function getCurrentRoute() {
 		return 'home';
 	} else if(document.location.pathname === '/results') {
 		$('#pac-input').show();
+		STATE.current_question = 0;
 		return 'search-results';
 	} else if(document.location.pathname === `/results/${STATE.place_ID}`) {
 		$('#pac-input').hide();
 		return 'single-result';
-	} else if(document.location.pathname === `/review/${STATE.place_ID}`) {
-		$('#pac-input').hide();
-		return 'review-questionnaire';
 	} else {
 		return null;
 	}
@@ -106,7 +103,6 @@ function getCurrentRoute() {
 
 const PAGE_VIEWS = {
 	'home': $('.js-home'),
-	'logout': $('.js-nav-logout'),
 	'search-results': $('.js-search-results'),
 	'single-result': $('.js-single-result-container'),
 };
@@ -130,7 +126,7 @@ function historyPushState(route) {
 // Render and display search results
 function displayPlaceInformation(places) {
 	if(places.length === 0) {
-		$('.js-search-results').html('Could not find results. Try a more specific search.  For example: "pizza near Boston"');
+		$('.js-search-results').html(`<p>Could not find results. Try a more specific search.  For example: "pizza near Boston"</p>`);
 		return;
 	} 
 
@@ -168,7 +164,7 @@ function renderReviewPercentages(place) {
 
 // Handle single location view
 function handleSingleResult() {
-	$('.js-search-results').on('click', '.js-place-name, button.review-start', event => {
+	$('.js-search-results').on('click', '.js-place-name', event => {
 	event.preventDefault();
 	STATE.current_question = 0;
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
@@ -181,10 +177,9 @@ function handleSingleResult() {
 		      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
 		      $('.js-single-result').html(html);
 		      if(STATE.IS_LOGGED_IN) {
-		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID));
+		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
 		    } else {
-		    	$('.js-review-questionnaire').html(loginToReview());
-		    	$('.js-review-questionnaire .js-login-to-review').focus();
+		    	$('.js-review-login').show();
 		    	}
 		    },
 		    error: function (err) {
@@ -194,12 +189,8 @@ function handleSingleResult() {
 	});
 };
 
-// LINK to LOGIN in order to Review the business
-function loginToReview() {
-	return `<button type="button" class="js-login-to-review">Please LOG IN to review this business</button>`
-};
-
-$('.js-review-questionnaire').on('click', '.js-login-to-review', event => {
+// LOGIN in order to Review the business
+$('.js-review-login').on('click', '.js-login-to-review', event => {
 	$('.js-login-modal').show();
 	$('#username-log').focus();
 });
@@ -212,7 +203,8 @@ function reviewQuestionnaireTemplate(placeId) {
 	if(STATE.current_question === STATE.review_statements.length) {
 		console.log(STATE.review_answers);
 		handleReviewSubmit(placeId);
-		$('.js-review-questionnaire').html("Your review has been submitted!");
+		$('.js-review-questionnaire').html("Your review has been submitted. Thank you for being an accessALLY!");
+		window.setTimeout(removeReviewSuccess, 3000);
 	} else {
 		return `
 	<h2 id="review">Your accessABLE Review</h2>
@@ -222,6 +214,7 @@ function reviewQuestionnaireTemplate(placeId) {
 	</form>`;
 	};
 };
+
 
 function displayReviewQuestionnaire() {
 	let reviewBlocks = [];
@@ -243,7 +236,7 @@ function renderReviewQuestionnaire(index) {
 	`
 }
 
-$('.js-single-result').on('click', '.js-answer-button', event => {
+$('.js-single-result-container').on('click', '.js-answer-button', event => {
 	event.preventDefault();
 	event.stopPropagation();
 	const reviewAnswer = $(event.currentTarget).parent().find('input[name="questionnaire-boolean"]').prop('checked', true).val();
@@ -286,9 +279,21 @@ function handleReviewSubmit(placeId) {
 	});
 };
 
+function showReviewQuestionnaireLoggedIn() {
+	if(document.location.pathname === `/results/${STATE.place_ID}`) {
+		$('.js-review-login').hide();
+		$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
+	}
+};
+
+function removeReviewSuccess() {
+	$('.js-review-questionnaire').html('').hide();
+};
+
 // Launch login modal
 $('nav').on('click', '.js-nav-login', event => {
 	$('.js-login-modal').show();
+	$('#username-log').focus();
 });
 
 // AJAX call to login
@@ -305,26 +310,19 @@ $('#js-form-login').on('submit', event => {
 	    success : function() {
 	      onLogin(usrname);
 	   },
-	   error: function (){
-	   	$('#login-form-messages').append('<p>Invalid username or password</p>');
+	   error: function (err){
+	   	$('#login-form-messages').html(`<p>${err}</p>`);
 	   }
 	});
 });
 
 function onLogin(usrname) {
 	$('.js-login-cancel').click();
-	STATE.route = 'logout';
-	$('.js-nav-welcome').text(`Welcome ${usrname}`);
+	$('.js-nav-login').hide();
+	$('.js-nav-logout').show();
+	$('.js-nav-welcome').text(`Welcome ${usrname}`).show();
 	STATE.IS_LOGGED_IN = true;
-	toggleReviewButtons();
-}
-
-function toggleReviewButtons() {
-	if (STATE.IS_LOGGED_IN) {
-		$('#js-search-results').find('button').show();
-	} else {
-		$('#js-search-results').find('button').hide();
-	}
+	showReviewQuestionnaireLoggedIn();
 }
 
 // Cancel login modal
@@ -332,10 +330,32 @@ $('.js-login-cancel').on('click', event => {
 	$('.js-login-modal').hide();
 });
 
+// AJAX call to logout
+$('.js-nav-logout').on('click', event => {
+	$.ajax({
+	    type: 'GET',
+	    url: '/logout', 
+	    success: function() {
+	      STATE.IS_LOGGED_IN = false;
+	      $('.js-nav-logout').hide();
+	      $('.js-nav-welcome').hide();
+	      $('.js-nav-login').show();
+	      if(document.location.pathname === `/results/${STATE.place_ID}`) {
+			$('.js-review-questionnaire').html('').hide();
+			$('.js-review-login').show();
+		  }
+	   },
+	   error: function (err){
+	   	console.log(err);
+	   }
+	});
+});
+
 // New User Registration
 $('.js-new-user').on('click', event => {
 	$('.js-login-cancel').click();
 	$('.js-registration-modal').show();
+	$('#username-reg').focus();
 });
 
 // AJAX call to post new user
@@ -362,12 +382,10 @@ $('#js-form-register').on('submit', event => {
 	    contentType: 'application/json', 
 	    success: function() {
 	      $('.js-registration-cancel').click();
-	      $('.js-nav-login').hide();
-	      $('.js-nav-welcome').show().text(`Welcome ${usrname}`);
-	      $('.js-nav-logout').show();
+	      $('.js-nav-login').click();
 	   },
 	   error: function (err){
-	   	console.log(err);
+	   	$('#reg-form-messages').html(`<p>* ${err.responseJSON.location} ${err.responseJSON.message} *</p>`);
 	   }
 	});
 });
@@ -377,27 +395,8 @@ $('.js-registration-cancel').on('click', event => {
 	$('.js-registration-modal').hide();
 });
 
-// AJAX call to logout
-$('.js-nav-logout').on('click', event => {
-	$.ajax({
-	    type: 'GET',
-	    url: '/logout', 
-	    success: function() {
-	      $('.js-nav-logout').toggle();
-	      $('.js-nav-welcome').hide().text(`Welcome`);
-	      $('.js-nav-login').toggle();
-	      toggleReviewButtons();
-	   },
-	   error: function (err){
-	   	console.log(err);
-	   }
-	});
-});
 
 
-///// ADD REVIEWS TO BUSINESS SEARCH RESULTS USING BUSINESS ID
-
-///// CREATE QUESTIONNAIRE .js-review-prompt
 
 ///// POST QUESTIONNAIRE ANSWERS AND USERNAME TO /REVIEWS/:id
 

@@ -3,7 +3,9 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
+
 
 #description {
   font-family: Roboto;
@@ -106,10 +108,22 @@ nav ul {
 
 .nav-link {
   display: inline-block;
+  cursor: pointer;
+  border-top: 1px solid grey;
+  width: 250px;
+}
+
+.nav-link:hover {
+  border-top: none;
+  border-bottom: 1px solid grey;
 }
 
 .nav--logout {
   display: none;
+}
+
+.nav--welcome {
+  
 }
 
 /* RESULTS display */
@@ -138,7 +152,11 @@ nav ul {
   color: pink;
 }
 
-/* QUESTIONNAIRE BUTTONS */
+/* QUESTIONNAIRE */
+.review-questionnaire {
+  
+}
+
 .questionnaire-radios li {
   list-style-type: none;
   display: inline-block;
