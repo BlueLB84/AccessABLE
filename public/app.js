@@ -6,8 +6,9 @@ const STATE = {
 	current_question: 0,
 	place_ID: null,
 	route: 'home',
-	IS_LOGGED_IN: false,
-	JWT: null
+	I_L_I: false,
+	J_W_T: null,
+	username: null
 }
 
 // GOOGLE MAP autocomplete and geolocation bounds
@@ -178,27 +179,52 @@ function handleSingleResult() {
 	$('.js-search-results').on('click', '.js-place-name', event => {
 	event.preventDefault();
 	STATE.current_question = 0;
+	STATE.review_text = '';
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
 	const anchorHash = $(event.currentTarget).data('anchor');
 
 		$.ajax({
 		    type: 'GET',
-		    url:`/results/${STATE.place_ID}`, 
+		    url: `/results/${STATE.place_ID}`, 
 		    success: function(html) {
 		      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
 		      $('.js-single-result').html(html);
-		      if(STATE.IS_LOGGED_IN) {
+		      getReviewIconPercentages(STATE.place_ID);
+		      
+		      if(STATE.I_L_I) {
 		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
 		    } else {
 		    	$('.js-review-login').show();
 		    	}
 		    },
 		    error: function (err) {
-		   	console.log(err);
+		   		console.log(err);
 		    }
 		});
 	});
 };
+
+function getReviewIconPercentages(placeID) {
+	const data = {'businessId': `${placeID}`};
+
+	$.ajax({
+		type: 'GET',
+		url: '/reviews',
+		contentType: 'application/json',
+	    data: data,
+		success: function(reviews) {
+			console.log(reviews);
+			renderPercentages(reviews);
+		},
+		error: function (err) {
+		   	console.log(err);
+		}
+	});
+};
+
+function renderPercentages(reviewObj) {
+	console.log(reviewObj.reviews.map(review => review.userRatings));
+}
 
 // LOGIN in order to Review the business
 $('.js-review-login').on('click', '.js-login-to-review', event => {
@@ -206,6 +232,15 @@ $('.js-review-login').on('click', '.js-login-to-review', event => {
 	$('#username-log').focus();
 });
 
+function reviewQuestionnaireLoggedIn() {
+	if(STATE.I_L_I) {
+		$('.js-review-login').hide();
+		$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
+	} else {
+		$('.js-review-login').show();
+		$('.js-review-questionnaire').html('').hide();
+	}
+};
 
 // QUESTIONNAIRE //
 function reviewQuestionnaireTemplate(placeId) {
@@ -261,7 +296,6 @@ function renderReviewTextArea() {
 
 $('.js-review-questionnaire').on('click', '.js-review-submit', event => {
 	STATE.review_text = $(event.currentTarget).parent().find('#js-review-text').val();
-	console.log(STATE.review_text);
 	handleReviewSubmit(STATE.place_ID);
 });
 
@@ -285,7 +319,7 @@ function handleReviewSubmit(placeId) {
 
 	const answers = STATE.review_answers;
 	const data = {
-		'username': 'adminlbv',
+		'username': STATE.username,
 		'businessId': placeId,
 		'userRatings': {
 			parkingSpaces: answers[0],
@@ -303,8 +337,12 @@ function handleReviewSubmit(placeId) {
 		url: '/reviews',
 		contentType: 'application/json',
 	    data: JSON.stringify(data),
+	    beforeSend : function( xhr ) {
+        	xhr.setRequestHeader( 'Authorization', 'BEARER ' + STATE.J_W_T);
+    	},
 		success: function() {
 			console.log('successful review POST');
+			resetReviewSTATE();
 		},
 		error: function(err) {
 			console.log(err);
@@ -312,12 +350,10 @@ function handleReviewSubmit(placeId) {
 	});
 };
 
-function showReviewQuestionnaireLoggedIn() {
-	if(document.location.pathname === `/results/${STATE.place_ID}`) {
-		$('.js-review-login').hide();
-		$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
-	}
-};
+function resetReviewSTATE() {
+	STATE.review_answers = [];
+	STATE.review_text = '';
+}
 
 function removeReviewSuccess() {
 	$('.js-review-questionnaire').html('').hide();
@@ -354,9 +390,10 @@ function onLogin(usrname, data) {
 	$('.js-nav-login').hide();
 	$('.js-nav-logout').show();
 	$('.js-nav-welcome').text(`Welcome ${usrname}`).show();
-	STATE.JWT = data.authToken;
-	STATE.IS_LOGGED_IN = true;
-	showReviewQuestionnaireLoggedIn();
+	STATE.J_W_T = data.authToken;
+	STATE.I_L_I = true;
+	STATE.username = usrname;
+	reviewQuestionnaireLoggedIn();
 }
 
 // Cancel login modal
@@ -379,16 +416,14 @@ $('.js-nav-logout').on('click', event => {
 });
 
 function onLogout() {
-	STATE.IS_LOGGED_IN = false;
-	STATE.JWT = null;
+	STATE.I_L_I = false;
+	STATE.J_W_T = null;
+	STATE.username = null;
 	STATE.review_answers = [];
 	$('.js-nav-logout').hide();
 	$('.js-nav-welcome').hide();
 	$('.js-nav-login').show();
-	if(document.location.pathname === `/results/${STATE.place_ID}`) {
-		$('.js-review-questionnaire').html('').hide();
-		$('.js-review-login').show();
-	}
+	reviewQuestionnaireLoggedIn();
 };
 
 // New User Registration
@@ -435,10 +470,6 @@ $('.js-registration-cancel').on('click', event => {
 	$('.js-registration-modal').hide();
 });
 
-
-
-
-///// POST QUESTIONNAIRE ANSWERS AND USERNAME TO /REVIEWS/:id
 
 ///// GET REVIEWS FOR A LOCATION -- add db search for location
 
