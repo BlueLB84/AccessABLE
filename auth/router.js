@@ -13,6 +13,7 @@ const createAuthToken = user => {
 };
 
 const router = express.Router();
+const jwtAuth = passport.authenticate('jwt', { session: false }); 
 
 router.post(
 	'/login',
@@ -23,10 +24,7 @@ router.post(
 	}
 );
 
-router.post(
-	'/refresh',
-	passport.authenticate('jwt', {session: false}),
-	(req, res) => {
+router.post('/refresh', jwtAuth, (req, res) => {
 		const authToken = createAuthToken(req.user);
 		res.json({authToken});
 	}
