@@ -5,8 +5,16 @@ mongoose.Promise = global.Promise;
 const {Review} = require('../../models');
 
 module.exports = function(req, res) {
+	let businessQuery = {};
+
+	if(req.query.businessId) {
+		businessQuery = {'businessId': req.query.businessId}
+	} else {
+		businessQuery = {};
+	}
+
 	Review
-		.find({'businessId': req.query.businessId})
+		.find(businessQuery)
 		.then(reviews => {
 			res.json({
 				reviews: reviews.map(

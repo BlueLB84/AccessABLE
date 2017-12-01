@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 const {Review} = require('../../models');
 
 module.exports = function(req, res) {
-	const requiredFields = ['id', 'userId'];
+	const requiredFields = ['id', 'username'];
 	for (let i=0; i<requiredFields.length; i++) {
 		const field = requiredFields[i];
 		if (!(field in req.body)) {

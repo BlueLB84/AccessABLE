@@ -35,8 +35,9 @@ function generateBoolean() {
 
 function generateReviewData() {
 	return{
+		// id: faker.random.uuid(),
 		businessId: generateBusinessId(),
-		userId: faker.random.uuid(),
+		username: faker.lorem.word(),
 		userRatings: {
 			access: generateBoolean(),
 			parkingSpaces: generateBoolean(),
@@ -208,7 +209,7 @@ describe('Reviews API resource', function() {
 			.findOne()
 			.then(function(review) {
 				updateData.id = review.id;
-				updateData.userId = review.userId;
+				updateData.username = review.username;
 				return chai.request(app)
 					.put(`/reviews/${review.id}`)
 					.send(updateData);
