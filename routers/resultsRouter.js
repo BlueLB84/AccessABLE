@@ -6,7 +6,6 @@ const jsonParser = bodyParser.json();
 const queryString = require('qs');
 var session = require('express-session');
 
-
 router.get('/', function(req, res) {
 	req.session.query = req.query.query;
 	const GOOGLE_PLACE_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
