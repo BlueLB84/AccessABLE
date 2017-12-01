@@ -6,7 +6,7 @@ const {Review} = require('../../models');
 
 module.exports = function(req, res) {
 	Review
-		.find()
+		.find({'businessId': req.query.businessId})
 		.then(reviews => {
 			res.json({
 				reviews: reviews.map(
