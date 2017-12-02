@@ -13,7 +13,7 @@ const {TEST_DATABASE_URL} = require('../config');
 chai.use(chaiHttp);
 
 /// SEED DATA GENERATION AND DB INSERTION ///
-// search "coffee" for Acton coffee businesses
+
 function seedReviewData() {
 	console.info('seeding review data');
 	const seedData = [];
@@ -34,8 +34,7 @@ function generateBoolean() {
 }
 
 function generateReviewData() {
-	return{
-		// id: faker.random.uuid(),
+	return {
 		businessId: generateBusinessId(),
 		username: faker.lorem.word(),
 		userRatings: {
