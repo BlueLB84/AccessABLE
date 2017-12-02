@@ -6,7 +6,7 @@ const {User} = require('../../user-models');
 
 module.exports = function(req, res) {
 	User
-		.findById(req.params.username)
+		.findById(req.params.userid)
 		.then(user => res.json(user.userApiRep()))
 		.then(res.status(200))
 		.catch(err => {
