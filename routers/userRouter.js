@@ -13,12 +13,11 @@ const userPostRouter = require('./userRouters/userPostRouter');
 const userPutRouter = require('./userRouters/userPutRouter');
 const userDeleteRouter = require('./userRouters/userDeleteRouter');
 
-router.get('/:username', passport.authenticate('jwt', {session: false}), userGetIdRouter);
+const jwtAuth = passport.authenticate('jwt', {session: false});
+
+router.get('/:userid', jwtAuth, userGetIdRouter);
 router.post('/', jsonParser, userPostRouter);
-router.put('/:username', jsonParser, userPutRouter);
-router.delete('/:userid', userDeleteRouter);
+router.put('/:userid', [jwtAuth, jsonParser], userPutRouter);
+router.delete('/:userid', jwtAuth, userDeleteRouter);
 
 module.exports = router;
-
-
-// write and link to middleware functions for each of these endpoints
