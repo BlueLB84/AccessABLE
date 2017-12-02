@@ -12,24 +12,24 @@ module.exports = function(req, res) {
 		return res.status(400).send(message);
 	}
 	
-	if (req.params.username !== req.body.username) {
-		const message = (`Request path username (${req.params.username}) and request body username (${req.body.username}) must match`);
+	if (req.params.userid !== req.body.userId) {
+		const message = (`Request path user ID (${req.params.userid}) and request body user ID(${req.body.userId}) must match`);
 		console.error(message);
 		return res.status(400).send(message);
 	}
 
-	console.log(`Updating user with username: ${req.params.username}`);
+	console.log(`Updating user with user ID: ${req.params.userid}`);
 	const toUpdate = {};
 	const updateableField = 'userBio';
 
 	if (updateableField in req.body) {
-			toUpdate[field] = req.body[field];
+			toUpdate[updateableField] = req.body[updateableField];
 		}
 	
 
 	User
-		.findByIdAndUpdate(req.params.username, {$set: toUpdate})
-		.then(review => res.status(204).end())
+		.findByIdAndUpdate(req.params.userid, {$set: toUpdate})
+		.then(user => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 };
 
