@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
 	},
 	firstName: {type: String, default: ''},
 	lastName: {type: String, default: ''},
-	userBio: {type: String, default: ''}
+	userBio: {type: String, default: ''},
+	reviews: {type: Array, default: []}
 });
 
 userSchema.methods.userApiRep = function() {
@@ -24,7 +25,8 @@ userSchema.methods.userApiRep = function() {
 		username: this.username || '',
 		firstName: this.firstName || '',
 		lastName: this.lastName || '',
-		userBio: this.userBio || ''
+		userBio: this.userBio || '',
+		reviews: this.reviews || []
 	};
 };
 
