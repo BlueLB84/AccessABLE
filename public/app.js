@@ -8,7 +8,8 @@ const STATE = {
 	route: 'home',
 	I_L_I: false,
 	J_W_T: null,
-	username: null
+	username: null,
+	userId: null
 }
 
 // GOOGLE MAP autocomplete and geolocation bounds
@@ -189,7 +190,6 @@ function handleSingleResult() {
 		    success: function(html) {
 		      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
 		      $('.js-single-result').html(html);
-		      getReviewIconPercentages(STATE.place_ID);
 		      
 		      if(STATE.I_L_I) {
 		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
@@ -204,27 +204,25 @@ function handleSingleResult() {
 	});
 };
 
-function getReviewIconPercentages(placeID) {
-	const data = {'businessId': `${placeID}`};
+// function getReviewIconPercentages(placeID) {
+// 	const data = {'businessId': `${placeID}`};
 
-	$.ajax({
-		type: 'GET',
-		url: '/reviews',
-		contentType: 'application/json',
-	    data: data,
-		success: function(reviews) {
-			console.log(reviews);
-			renderPercentages(reviews);
-		},
-		error: function (err) {
-		   	console.log(err);
-		}
-	});
-};
+// 	$.ajax({
+// 		type: 'GET',
+// 		url: '/reviews',
+// 		contentType: 'application/json',
+// 	    data: data,
+// 		success: function(reviews) {
+// 			console.log(reviews);
+			
+// 		},
+// 		error: function (err) {
+// 		   	console.log(err);
+// 		}
+// 	});
+// };
 
-function renderPercentages(reviewObj) {
-	console.log(reviewObj.reviews.map(review => review.userRatings));
-}
+
 
 // LOGIN in order to Review the business
 $('.js-review-login').on('click', '.js-login-to-review', event => {
@@ -319,7 +317,6 @@ function handleReviewSubmit(placeId) {
 
 	const answers = STATE.review_answers;
 	const data = {
-		'username': STATE.username,
 		'businessId': placeId,
 		'userRatings': {
 			parkingSpaces: answers[0],
@@ -340,7 +337,10 @@ function handleReviewSubmit(placeId) {
 	    beforeSend : function( xhr ) {
         	xhr.setRequestHeader( 'Authorization', 'BEARER ' + STATE.J_W_T);
     	},
-		success: function() {
+		success: function(reviewData) {
+			const reviewId = reviewData.id;
+			const username = reviewData.username;
+
 			console.log('successful review POST');
 			resetReviewSTATE();
 		},
@@ -377,6 +377,7 @@ $('#js-form-login').on('submit', event => {
 	    username: usrname,
 	    password: passwrd, 
 	    success : function(data) {
+	      console.log(data);
 	      onLogin(usrname, data);
 	   },
 	   error: function (err){
