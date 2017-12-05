@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = mongoose.Schema({
-	username: {type: String, required: true},
+	userId: {type: String, required: true},
 	businessId: {type: String, required: true},
 	reviewDate: {type: Date, default: Date.now},	
 	userRatings: {
@@ -23,6 +23,7 @@ reviewSchema.methods.reviewApiRep = function() {
 		id: this._id,
 		businessId: this.businessId,
 		username: this.username,
+		userId: this.userId,
 		userRatings: this.userRatings,
 		reviewText: this.reviewText,
 		reviewDate: this.reviewDate
