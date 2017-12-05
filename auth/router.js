@@ -17,10 +17,12 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 router.post(
 	'/login',
-	passport.authenticate('basic', {session: false}),
+	passport.authenticate('basic', {session: true}),
 	(req, res) => {
 		const authToken = createAuthToken(req.user.userApiRep());
-		res.json({authToken});
+		const userInfo = req.user.userApiRep();
+		console.log(req.session);
+		res.json({authToken, userInfo});
 	}
 );
 

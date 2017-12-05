@@ -9,7 +9,7 @@ const {User} = require('../user-models');
 const {JWT_SECRET} = require('../config');
 
 const basicStrategy = new BasicStrategy((username, password, callback) => {
-	let user;
+	let user = {};
 	User
 	.findOne({username: username})
 	.then(_user => {
