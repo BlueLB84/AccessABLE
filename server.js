@@ -55,6 +55,15 @@ app.use(passport.initialize());
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+
 // Routers
 app.use('/reviews', reviewsRouter);
 app.use('/users', userRouter);
