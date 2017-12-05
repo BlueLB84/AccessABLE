@@ -26,9 +26,8 @@ module.exports = function(req, res) {
 			toUpdate[updateableField] = req.body[updateableField];
 		}
 	
-
 	User
-		.findByIdAndUpdate(req.params.userid, {$set: toUpdate})
+		.findByIdAndUpdate(req.params.userid, {$set: toUpdate, $push: {reviews: req.body.reviewId}})
 		.then(user => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 };

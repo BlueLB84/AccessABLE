@@ -10,6 +10,7 @@ mongoose.Promise = global.Promise;
 
 const reviewsGetRouter = require('./reviewsRouters/reviewsGetRouter');
 const reviewsGetIdRouter = require('./reviewsRouters/reviewsGetIdRouter');
+const reviewsGetPlaceIdRouter = require('./reviewsRouters/reviewsGetPlaceIdRouter');
 const reviewsPostRouter = require('./reviewsRouters/reviewsPostRouter');
 const reviewsPutRouter = require('./reviewsRouters/reviewsPutRouter');
 const reviewsDeleteRouter = require('./reviewsRouters/reviewsDeleteRouter');
