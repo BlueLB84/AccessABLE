@@ -6,7 +6,7 @@ for place in places
 	div(id=place.place_id class='result-container')
 		if reviewed
 			img(src='../images/reviewed_icon.svg' alt='accessable review exists icon' class='reviewed-icon')
-		h2(class='place-name js-place-name', data-anchor='top')= place.name
+		h2(class='place-name js-place-name')= place.name
 		p= place.formatted_address
 		img(src= staticURL + lat + ',' + lng, alt=img_title class='results-map')
 
