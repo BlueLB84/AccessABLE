@@ -13,9 +13,10 @@ module.exports = function(req, res) {
 			return res.status(400).send(message);
 		}
 	}
+	console.log(req.user);
 	Review
 		.create({
-			userId: req.session.user._id,
+			userId: req.user.userId,
 			businessId: req.body.businessId, // Google Places Id
 			userRatings: req.body.userRatings,
 			reviewText: req.body.reviewText
