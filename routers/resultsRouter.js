@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
+
 router.get('/', function(req, res) {
 	req.session.query = req.query.query;
 	const GOOGLE_PLACE_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
@@ -20,11 +21,31 @@ router.get('/', function(req, res) {
 		location: `${req.query.lat},${req.query.lng}`,
 		query: req.query.query
 	}
+	const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
 
 	var details = axios.get(`${GOOGLE_PLACE_SEARCH_URL}${queryString.stringify(queryParams)}`);
 	
 	details.then(response => {
-		res.send(response.data.results);
+		const places = response.data.results;
+		var reviews = Review.find({businessId: { $in: places.map(place => place.place_id) } });
+
+
+		reviews.then(reviews => {
+
+			places.forEach((place) => {
+				place.userReviews = reviews.filter(review => review.businessId === place.place_id);
+				if(place.userReviews.length >= 1) {
+					place.reviewIcon = true;
+				}
+			});
+
+			res.render('results', 
+			{places: places,
+			staticURL: GOOGLE_STATIC_MAP_URL
+			});
+		})
+		
+		
 	})
 	.catch(e => {
 		console.log(e);
@@ -39,30 +60,42 @@ router.get('/:place_id', function(req, res) {
 	Promise.all([details, reviews]).then(responses => {
 		const reviewsData = responses[1];
 		const reviewsRatings = reviewsData.map(review => review.userRatings);
-		console.log(reviewsRatings);
+		
+		const reviewsText = reviewsData.map(function(review) {
+			if(review.reviewText !== undefined) {
+				return review.reviewText;
+			} else {
+				return ;
+			}
+		});
 
 		function reviewCategoryPct(item) {
-		  let result = reviewsRatings.filter(review => review[item] === true).length;
-		  return `${(result/reviewsRatings.length) * 100}%`;
-		}
+			let result = reviewsRatings.filter(review => review[item] === true).length;
+
+			if(reviewsRatings.length >= 1) {
+				return `${result}/${reviewsRatings.length}`;
+			} else {
+				return '';
+			}
+		};
 
 		const detailsData = responses[0].data.result;
 		const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
 		
 		res.render('index', 
 			{ title: 'accessABLE', 
-			place_name: `${detailsData.name}`, 
-			address: `${detailsData.formatted_address}`, 
+			place_name: detailsData.name, 
+			address: detailsData.formatted_address, 
 			img_src: `${GOOGLE_STATIC_MAP_URL}${detailsData.geometry.location.lat},${detailsData.geometry.location.lng}`, 
 			img_title: `${detailsData.name} static map`,
-			recentReviews: `${reviewsData.splice(0, 2)}`,
-			parking_pct: `${reviewCategoryPct('parkingSpaces')}`,
-			access_pct: `${reviewCategoryPct('access')}`,
-			service_pct: `${reviewCategoryPct('service')}`,
-			int_nav_pct: `${reviewCategoryPct('interiorNavigation')}`,
-			restroom_pct: `${reviewCategoryPct('restroom')}`,
-			serv_dog_pct: `${reviewCategoryPct('serviceAnimal')}`
-			}); // look at PUG docs for list iteration
+			reviewText: reviewsText,
+			parking_pct: reviewCategoryPct('parkingSpaces'),
+			access_pct: reviewCategoryPct('access'),
+			service_pct: reviewCategoryPct('service'),
+			int_nav_pct: reviewCategoryPct('interiorNavigation'),
+			restroom_pct: reviewCategoryPct('restroom'),
+			serv_dog_pct: reviewCategoryPct('serviceAnimal')
+			});
 	}).catch(e => {
 		console.log(e);
 	});
