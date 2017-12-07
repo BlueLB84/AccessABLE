@@ -52,6 +52,7 @@ app.use(function(req, res, next) {
 
 // Authentication
 app.use(passport.initialize());
+app.use(passport.session());
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
 
@@ -80,7 +81,7 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-// catch all other routess
+// catch all other routers
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
 });
