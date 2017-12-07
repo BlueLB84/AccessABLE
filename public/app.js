@@ -8,8 +8,7 @@ const STATE = {
 	route: 'home',
 	I_L_I: false,
 	J_W_T: null,
-	username: null,
-	userId: null
+	username: null
 }
 
 // GOOGLE MAP autocomplete and geolocation bounds
@@ -44,9 +43,9 @@ function initAutocomplete() {
 	    url: '/results',
 	    contentType: 'application/json',
 	    data: data,
-	    success : function(data) {
+	    success : function(html) {
 		    input.value = '';
-		    displayPlaceInformation(data);
+		    $('.js-search-results').html(html);
 		    historyPushState('results');
 	    },
 	    error: function (err){
@@ -128,53 +127,6 @@ function historyPushState(route) {
 	renderAccessABLE(PAGE_VIEWS);
 }
 
-// Render and display search results
-function displayPlaceInformation(places) {
-	if(places.length === 0) {
-		$('.js-search-results').html(`<p>Could not find results. Try a more specific search.  For example: "pizza near Boston"</p>`);
-		return;
-	} 
-
-	const placeInfoHTML = places.map((item, index) => {
-		return renderPlaceInformation(item);
-	});
-	$('.js-search-results').html(placeInfoHTML.join(''));
-}
-
-function renderPlaceInformation(place) {
-	const staticMapImgSrc = renderMap(place);
-	const reviewPercentages = renderReviewPercentages(place.place_id);
-
-	return `
-	<div id="${place.place_id}">
-	<h2 class='place-name js-place-name' data-anchor="top">${place.name}</h2>
-	<p>${place.formatted_address}</p>
-	<img src="${staticMapImgSrc}" class="staticImg">
-	<section class="js-review-percentages">${reviewPercentages}<section>
-	</div>
-	`;
-};
-
-function renderMap(place) {
-	let latlng = `${place.geometry.location.lat},${place.geometry.location.lng}`;
-	const staticMapImgURL = `${GOOGLE_STATIC_MAP_URL}${latlng}`;
-	return staticMapImgURL;
-};
-
-function renderReviewPercentages(place) {
-	return `
-		<div class="review-icon-container">
-			<img src="../images/parking_icon.svg" alt="handicap parking icon" class="results-icon"/>
-			<img src="../images/enter_exit_icon.svg" alt="enter and exit icon"/>
-			<img src="../images/customer_service_icon.svg" alt="customer service icon" class="results-icon"/>
-			<img src="../images/interior_navigation.svg" alt="interior navigation icon" class="results-icon"/>
-			<img src="../images/bathroom_icon.svg" alt="handicap bathroom icon" class="results-icon"/>
-			<img src="../images/service_dog_icon.svg" alt="service dog paw icon" class="results-icon"/>
-		</div>
-	`;
-}
-
-
 // Handle single location view
 function handleSingleResult() {
 	$('.js-search-results').on('click', '.js-place-name', event => {
@@ -182,47 +134,38 @@ function handleSingleResult() {
 	STATE.current_question = 0;
 	STATE.review_text = '';
 	STATE.place_ID = $(event.currentTarget).parent().attr('id');
-	const anchorHash = $(event.currentTarget).data('anchor');
 
-		$.ajax({
+	ajaxGetSingleResult('push');
+	});
+};
+
+function ajaxGetSingleResult(state) {
+
+	$.ajax({
 		    type: 'GET',
 		    url: `/results/${STATE.place_ID}`, 
 		    success: function(html) {
-		      historyPushState(`/results/${STATE.place_ID}#${anchorHash}`);
-		      $('.js-single-result').html(html);
+		    	if(state === 'push') {
+				historyPushState(`/results/${STATE.place_ID}`);
+				} else if(state === 'replace') {
+					history.replaceState({}, null, `/results/${STATE.place_ID}`);
+					renderAccessABLE(PAGE_VIEWS);
+				}
 		      
-		      if(STATE.I_L_I) {
-		      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
-		    } else {
-		    	$('.js-review-login').show();
-		    	}
-		    },
+
+		    	$('.js-single-result').html(html);
+		      
+			    if(STATE.I_L_I) {
+			      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
+			    } else {
+			    	$('.js-review-login').show();
+			    	}
+			    },
 		    error: function (err) {
 		   		console.log(err);
 		    }
 		});
-	});
-};
-
-// function getReviewIconPercentages(placeID) {
-// 	const data = {'businessId': `${placeID}`};
-
-// 	$.ajax({
-// 		type: 'GET',
-// 		url: '/reviews',
-// 		contentType: 'application/json',
-// 	    data: data,
-// 		success: function(reviews) {
-// 			console.log(reviews);
-			
-// 		},
-// 		error: function (err) {
-// 		   	console.log(err);
-// 		}
-// 	});
-// };
-
-
+}
 
 // LOGIN in order to Review the business
 $('.js-review-login').on('click', '.js-login-to-review', event => {
@@ -312,7 +255,7 @@ function nextReviewStatement() {
 };
 
 function handleReviewSubmit(placeId) {
-	$('.js-review-questionnaire').html("Your review has been submitted. Thank you for being an accessALLY!");
+	$('.js-review-questionnaire').html('<p class="review-submitted">Your review has been submitted. Thank you for being an accessALLY!</p>');
 		window.setTimeout(removeReviewSuccess, 3000);
 
 	const answers = STATE.review_answers;
@@ -341,8 +284,9 @@ function handleReviewSubmit(placeId) {
 			const reviewId = reviewData.id;
 			const username = reviewData.username;
 
-			console.log('successful review POST');
 			resetReviewSTATE();
+			ajaxGetSingleResult('replace');
+
 		},
 		error: function(err) {
 			console.log(err);
@@ -377,7 +321,6 @@ $('#js-form-login').on('submit', event => {
 	    username: usrname,
 	    password: passwrd, 
 	    success : function(data) {
-	      console.log(data);
 	      onLogin(usrname, data);
 	   },
 	   error: function (err){
