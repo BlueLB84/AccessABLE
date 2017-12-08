@@ -1,8 +1,11 @@
 h1= place_name
 p= address
 img(src=img_src alt=img_title)
-h4 What accessABLE users are saying:
-p!= '(Guidance: ' + '<span class="review-fraction">2/5</span> means that 2 out of 5 users gave positive feedback in the category)'
+if parking_pct === ''
+	h4 Be the first to review this business! 
+else
+	h4 What accessABLE users are saying:
+	p!= '(Guidance: ' + '<span class="review-fraction">2/5</span> means that 2 out of 5 users gave positive feedback in the category)'
 div(class='review-icon-container js-review-icon-container')
 	include ./icon_percentages.pug	
 div(class='recent-reviews')
