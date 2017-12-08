@@ -33,11 +33,23 @@ const basicStrategy = new BasicStrategy((username, password, callback) => {
 	})
 	.catch(err => {
 		if (err.reason === 'LoginError') {
-			return callback(null, false, { message: 'Incorrect username or password' });
+			return callback(null, false, err.message);
 		}
 		return callback(err, false);
 	});
 });
+
+
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.validPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
 
 const jwtStrategy = new JwtStrategy(
 	{
