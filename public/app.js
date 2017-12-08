@@ -328,7 +328,8 @@ $('#js-form-login').on('submit', event => {
 	      onLogin(usrname, data);
 	   },
 	   error: function (err){
-	   	$('#login-form-messages').html(`<p>${err}</p>`);
+	   	console.log(err);
+	   	$('#login-form-messages').html(`<p>Incorrect username or password</p>`);
 	   }
 	});
 });
@@ -417,9 +418,6 @@ $('#js-form-register').on('submit', event => {
 $('.js-registration-cancel').on('click', event => {
 	$('.js-registration-modal').hide();
 });
-
-
-///// GET REVIEWS FOR A LOCATION -- add db search for location
 
 
 $(document).ready(function() {
