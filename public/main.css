@@ -88,8 +88,50 @@ html, body {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid grey;
-  background-color: pink;
+  border: 2px solid black;
+  background-color: #eaf555;
+  padding-bottom: 10px;
+}
+
+.nav--login-modal h2 {
+  text-align: center;
+}
+
+.login-input {
+  text-align: center;
+}
+
+.login-input input {
+  padding: 5px 3px;
+}
+
+#username-log {
+  margin-right: 10px;
+}
+
+.login-buttons {
+  margin: 10px 0;
+}
+
+.login-buttons button, .button--new-user, .nav--registration-modal button {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+}
+
+.login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover {
+  background-color: #d4dddd;
+}
+
+.button--login-submit {
+  margin-right: 10px;
+}
+
+.button--new-user {
+  margin-left: 10px;
 }
 
 /* REGISTRATION MODAL */
@@ -99,8 +141,31 @@ html, body {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid grey;
-  background-color: lightblue;
+  border: 2px solid black;
+  background-color: #1fc6be;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.nav--registration-modal > label, input {
+  margin-top: 10px;
+}
+
+.registration-input {
+  padding-right: 10px;
+}
+
+.registration-input label {
+  padding-left: 10px;
+  padding-right: 2px;
+}
+
+.registration-input input {
+  padding: 5px 3px;
+}
+
+.register-new-user {
+  margin-top: 15px;
 }
 
 /* NAV LINKS */
@@ -122,8 +187,13 @@ nav ul {
   border-bottom: 1px solid grey;
 }
 
+.nav--login-span {
+  font-size: 18px;
+}
+
 .nav--logout {
   display: none;
+  font-size: 18px;
 }
 
 .nav--welcome {
