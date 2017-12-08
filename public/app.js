@@ -141,26 +141,31 @@ function handleSingleResult() {
 
 function ajaxGetSingleResult(state) {
 
+	function checkILI() {
+		if(STATE.I_L_I) {
+			$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
+		} else if(STATE.I_L_I) {
+			$('.js-review-login').show();
+		}
+	}
+
 	$.ajax({
 		    type: 'GET',
 		    url: `/results/${STATE.place_ID}`, 
 		    success: function(html) {
 		    	if(state === 'push') {
 				historyPushState(`/results/${STATE.place_ID}`);
-				} else if(state === 'replace') {
+				checkILI();
+				}
+
+				if(state === 'replace') {
 					history.replaceState({}, null, `/results/${STATE.place_ID}`);
 					renderAccessABLE(PAGE_VIEWS);
+					removeReviewSuccess();
 				}
 		      
-
 		    	$('.js-single-result').html(html);
-		      
-			    if(STATE.I_L_I) {
-			      	$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
-			    } else {
-			    	$('.js-review-login').show();
-			    	}
-			    },
+			},
 		    error: function (err) {
 		   		console.log(err);
 		    }
@@ -256,7 +261,7 @@ function nextReviewStatement() {
 
 function handleReviewSubmit(placeId) {
 	$('.js-review-questionnaire').html('<p class="review-submitted">Your review has been submitted. Thank you for being an accessALLY!</p>');
-		window.setTimeout(removeReviewSuccess, 3000);
+		window.setTimeout(postReview, 3000);
 
 	const answers = STATE.review_answers;
 	const data = {
@@ -272,7 +277,8 @@ function handleReviewSubmit(placeId) {
 		'reviewText': STATE.review_text
 	};
 
-	$.ajax({
+	function postReview() {
+		$.ajax({
 		type: 'POST',
 		url: '/reviews',
 		contentType: 'application/json',
@@ -280,18 +286,16 @@ function handleReviewSubmit(placeId) {
 	    beforeSend : function( xhr ) {
         	xhr.setRequestHeader( 'Authorization', 'BEARER ' + STATE.J_W_T);
     	},
-		success: function(reviewData) {
-			const reviewId = reviewData.id;
-			const username = reviewData.username;
-
+		success: function() {
 			resetReviewSTATE();
 			ajaxGetSingleResult('replace');
-
 		},
 		error: function(err) {
 			console.log(err);
 		}
-	});
+		});
+	}
+	
 };
 
 function resetReviewSTATE() {
