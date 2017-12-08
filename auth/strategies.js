@@ -9,9 +9,9 @@ const {User} = require('../user-models');
 const {JWT_SECRET} = require('../config');
 
 const basicStrategy = new BasicStrategy((username, password, callback) => {
-	let user = {};
+	let user;
 	User
-	.findOne({username: username})
+	.findOne({ username: username })
 	.then(_user => {
 		user = _user;
 		if (!user) {
@@ -33,7 +33,7 @@ const basicStrategy = new BasicStrategy((username, password, callback) => {
 	})
 	.catch(err => {
 		if (err.reason === 'LoginError') {
-			return callback(null, false, err);
+			return callback(null, false, { message: 'Incorrect username or password' });
 		}
 		return callback(err, false);
 	});
