@@ -38,6 +38,7 @@ function initAutocomplete() {
 		},
 		complete: function() {
 			$('#loading').hide();
+			$("html, body").animate({ scrollTop: $('#js-snap-results').offset().top - 50}, 1000);
 		},
 	    method: 'GET',
 	    url: '/results',
@@ -129,11 +130,11 @@ function historyPushState(route) {
 
 // Handle single location view
 function handleSingleResult() {
-	$('.js-search-results').on('click', '.js-place-name', event => {
+	$('.js-search-results').on('click', '.js-result-container', event => {
 	event.preventDefault();
 	STATE.current_question = 0;
 	STATE.review_text = '';
-	STATE.place_ID = $(event.currentTarget).parent().attr('id');
+	STATE.place_ID = $(event.currentTarget).attr('id');
 
 	ajaxGetSingleResult('push');
 	});
@@ -165,6 +166,7 @@ function ajaxGetSingleResult(state) {
 				}
 		      
 		    	$('.js-single-result').html(html);
+		    	$("html, body").animate({ scrollTop: $('.js-single-result').offset().top - 50}, 1000);
 			},
 		    error: function (err) {
 		   		console.log(err);
@@ -182,6 +184,7 @@ function reviewQuestionnaireLoggedIn() {
 	if(STATE.I_L_I) {
 		$('.js-review-login').hide();
 		$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
+		$("html, body").animate({ scrollTop: $('#review').offset().top - 50}, 1000);
 	} else {
 		$('.js-review-login').show();
 		$('.js-review-questionnaire').html('').hide();

@@ -3,9 +3,44 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  padding-bottom: 30px;
   box-sizing: border-box;
   font-family: 'Nunito Sans', sans-serif;
+  color: #0B0A07;
 }
+
+/** Main / Landing View **/
+main {
+  position: relative;
+  text-align: right;
+  padding-top: 30px;
+  padding-bottom: 100px;
+  padding: 30px 75px 100px 0px;
+  background-color: #0B3954;
+  color: #EAF555;
+}
+
+main h1 {
+  font-size: 5em;
+  margin-top: 0;
+  border-bottom: 1px solid #EAF555; 
+}
+
+main h2 {
+  color: white;
+  margin-bottom: 30px;
+}
+
+main p {
+  width: 400px;
+  margin: 20px 0px 0px 50px;
+  padding-top: 5px;
+  font-size: 20px;
+  color: white;
+  border-top: 1px solid white;
+  text-align: left;
+}
+
 
 /** Google Autocomplete **/
 
@@ -55,18 +90,24 @@ html, body {
 }
 
 #pac-input {
+  display: block;
   background-color: #fff;
+  border: 3px solid #CCDAD1;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;
-  margin-left: 12px;
+  margin: 50px 0px 50px 50px;
   padding: 5px 11px 5px 13px;
   text-overflow: ellipsis;
-  width: 400px;
+  width: 450px;
 }
 
 #pac-input:focus {
-  border-color: #4d90fe;
+  border: 5px solid white;
+  outline-color: : #2176FF;
+  outline-style: dotted;
+  outline-width: 5px;
+  outline-offset: 2px;
 }
 
 #title {
@@ -88,8 +129,51 @@ html, body {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid grey;
-  background-color: pink;
+  border: 2px solid #0B0A07;
+  background-color: #eaf555;
+  padding-bottom: 10px;
+  z-index: 1;
+}
+
+.nav--login-modal h2 {
+  text-align: center;
+}
+
+.login-input {
+  text-align: center;
+}
+
+.login-input input {
+  padding: 5px 3px;
+}
+
+#username-log {
+  margin-right: 10px;
+}
+
+.login-buttons {
+  margin: 10px 0;
+}
+
+.login-buttons button, .button--new-user, .nav--registration-modal button, .js-login-to-review {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid #0B0A07;
+  background-color: white;
+  color: #0B0A07;
+}
+
+.login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover {
+  background-color: #CCDAD1;
+}
+
+.button--login-submit {
+  margin-right: 10px;
+}
+
+.button--new-user {
+  margin-left: 10px;
 }
 
 /* REGISTRATION MODAL */
@@ -99,31 +183,67 @@ html, body {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid grey;
-  background-color: lightblue;
+  border: 2px solid #0B0A07;
+  background-color: #1FC6BE;
+  color: #0B0A07;
+  text-align: center;
+  padding-bottom: 10px;
+  z-index: 1;
+}
+
+.nav--registration-modal > label, input {
+  margin-top: 10px;
+}
+
+.registration-input {
+  padding-right: 10px;
+}
+
+.registration-input label {
+  padding-left: 10px;
+  padding-right: 2px;
+}
+
+.registration-input input {
+  padding: 5px 3px;
+}
+
+.register-new-user {
+  margin-top: 15px;
 }
 
 /* NAV LINKS */
 
+nav {
+  background-color: #0B3954;
+}
 nav ul {
   list-style-type: none;
+  margin: 0;
+  padding-top: 20px;
 }
 
 .nav-link {
   display: inline-block;
   cursor: pointer;
-  border-top: 1px solid grey;
+  border-top: 1px solid #EAF555;
   width: 250px;
   margin-right: 10px;
+  color: #CCDAD1;
 }
 
 .nav-link:hover {
   border-top: none;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid #EAF555;
+}
+
+.nav--login-span {
+  font-size: 18px;
 }
 
 .nav--logout {
   display: none;
+  font-size: 18px;
 }
 
 .nav--welcome {
@@ -133,61 +253,215 @@ nav ul {
 /* RESULTS display */
 
 .fa-spin-container {
+  position:fixed;
   width: 100%;
   height: 100%;
-  position: absolute;
+  padding:0;
+  margin:0;
   top: 0;
   right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  color: purple;
+  background-color: rgba(31, 198, 190, 0.3);
+  color: white;
 }
 
-.staticImg {
-  display: block;
+.search-results {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 20px 0px;
 }
 
-.place-name:hover {
-  cursor: pointer;
-  color: pink;
-}
-
-/* QUESTIONNAIRE */
-.review-questionnaire {
-  
-}
-
-.questionnaire-radios li {
-  list-style-type: none;
-  display: inline-block;
-}
-
-.answer-button {
-  width: 40px;
-  height: 20px;
-  border: 1px solid black;
-}
-
-.review-icon-single {
-  display: inline-block;
-}
-
-/* Results */
 .result-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: relative;
   width: 500px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 3px solid #0B3954;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-results, .single-result {
+    background: white; /* For browsers that do not support gradients */        
+    background: -webkit-linear-gradient(180deg, #0B3954, white); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(180deg, #0B3954, white); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(180deg, #0B3954, white); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(180deg, #0B3954, white);
 }
 
 .reviewed-icon {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: -1;
+  z-index: 1;
 }
+
+.staticImg {
+  display: block;
+}
+
+.results-map {
+  border: 2px solid white;
+  border-radius: 4px;
+}
+
+.place-name {
+  width: 100%;
+  text-align: center;
+}
+
+/* Single Result View */
+.js-single-result {
+  width: 100%;
+}
+
+.single-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.single-result h1 {
+  margin-top: 0px;
+  padding-top:30px;
+  border-bottom: 1px solid white;
+  color: white;
+}
+
+.js-single-result p {
+  color: white;
+}
+
+.js-single-result h4 {
+  margin: 50px 0px 10px 0px;
+  font-size: 24px;
+  color: white;
+}
+
+.recent-reviews ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.recent-reviews li {
+  display: block;
+  width: 500px;
+  text-align: left;
+  margin: 10px 0px;
+  padding: 15px;
+  border: 1px solid white;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.review-icon-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 0px;
+}
+
+.review-icon-single p {
+  color: #0B0A07;
+  font-size: 16px;
+  margin: 0;
+  border-top: 1px solid #700353;
+  color: #700353;
+}
+
+.js-login-to-review {
+  margin: 20px 0px;
+}
+
+.js-login-to-review:hover {
+  background-color: #700353;
+  color: white;
+}
+
+
+/* QUESTIONNAIRE */
+.review-questionnaire {
+  margin-top: 50px;
+  border-top: 2px solid #0B0A07;
+  width: 90%;
+}
+
+.review-answers {
+  border: 2px dashed #700353;
+  text-align: center;
+}
+
+.review-answers legend {
+  font-size: 20px;
+  color: #700353;
+}
+
+.questionnaire-icon {
+  margin-top: 10px;
+}
+
+.questionnaire-radios li {
+  list-style-type: none;
+  display: block;
+}
+
+.questionnaire-radios {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.answer-button {
+  width: 80px;
+  margin-right: 40px;
+  height: 40px;
+  padding: 5px 10px;
+  border: 1px solid #0B0A07;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-true:hover  {
+  background-color: #eaf555;
+}
+
+.review-false:hover {
+  background-color: #1FC6BE;
+}
+
+.answer-button label {
+  cursor: pointer;
+}
+
+
+
+
 
 
 
