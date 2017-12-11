@@ -88,7 +88,7 @@ router.get('/:place_id', function(req, res) {
 			address: detailsData.formatted_address, 
 			img_src: `${GOOGLE_STATIC_MAP_URL}${detailsData.geometry.location.lat},${detailsData.geometry.location.lng}`, 
 			img_title: `${detailsData.name} static map`,
-			reviewText: reviewsText,
+			reviewText: reviewsText.slice(-5),
 			parking_pct: reviewCategoryPct('parkingSpaces'),
 			access_pct: reviewCategoryPct('access'),
 			service_pct: reviewCategoryPct('service'),
