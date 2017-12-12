@@ -5,40 +5,41 @@ html, body {
   padding: 0;
   padding-bottom: 30px;
   box-sizing: border-box;
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
   color: #0B0A07;
+  background-color: #39004d;
 }
 
 /** Main / Landing View **/
 main {
   position: relative;
-  text-align: right;
+  text-align: center;
   padding-top: 30px;
   padding-bottom: 100px;
-  padding: 30px 75px 100px 0px;
-  background-color: #0B3954;
+  background-color: #39004d;
   color: #EAF555;
 }
 
 main h1 {
-  font-size: 5em;
-  margin-top: 0;
-  border-bottom: 1px solid #EAF555; 
+  width: 90%;
+  margin: 10px auto;
+  border-bottom: 1px solid #EAF555;
+  font-size: 4rem; 
 }
 
 main h2 {
   color: white;
   margin-bottom: 30px;
+  font-size: 1rem;
 }
 
 main p {
   width: 400px;
-  margin: 20px 0px 0px 50px;
+  margin: 20px auto 0px auto;
   padding-top: 5px;
-  font-size: 20px;
   color: white;
   border-top: 1px solid white;
-  text-align: left;
 }
 
 
@@ -94,20 +95,18 @@ main p {
   background-color: #fff;
   border: 3px solid #CCDAD1;
   font-family: Roboto;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 300;
-  margin: 50px 0px 50px 50px;
+  margin: 50px auto;
   padding: 5px 11px 5px 13px;
   text-overflow: ellipsis;
-  width: 450px;
+  width: 90%;
 }
 
 #pac-input:focus {
   border: 5px solid white;
-  outline-color: : #2176FF;
-  outline-style: dotted;
-  outline-width: 5px;
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: 0 0 10px 10px #eaf555;
 }
 
 #title {
@@ -129,8 +128,7 @@ main p {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid #0B0A07;
-  background-color: #eaf555;
+  background-color: #c6741f;
   padding-bottom: 10px;
   z-index: 1;
 }
@@ -155,21 +153,22 @@ main p {
   margin: 10px 0;
 }
 
-.login-buttons button, .button--new-user, .nav--registration-modal button, .js-login-to-review {
+.login-buttons button, .button--new-user, .nav--registration-modal button, .js-login-to-review, .js-review-submit {
   cursor: pointer;
-  font-size: 14px;
   padding: 4px 8px;
   border: 1px solid #0B0A07;
-  background-color: white;
   color: #0B0A07;
 }
 
-.login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover {
-  background-color: #CCDAD1;
+.login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover, .js-review-submit:hover {
+  background-color: #eaf555;
 }
 
-.button--login-submit {
+.nav--login-modal .button--login-submit, .nav--registration-modal .button--login-submit {
   margin-right: 10px;
+  background-color: #39004d;
+  border: 1px solid white;
+  color: white;
 }
 
 .button--new-user {
@@ -183,7 +182,6 @@ main p {
   top: 30px;
   left:  100px;
   width: 500px;
-  border: 2px solid #0B0A07;
   background-color: #1FC6BE;
   color: #0B0A07;
   text-align: center;
@@ -215,7 +213,7 @@ main p {
 /* NAV LINKS */
 
 nav {
-  background-color: #0B3954;
+  background-color: #39004d;
 }
 nav ul {
   list-style-type: none;
@@ -227,9 +225,9 @@ nav ul {
   display: inline-block;
   cursor: pointer;
   border-top: 1px solid #EAF555;
-  width: 250px;
+  width: 300px;
   margin-right: 10px;
-  color: #CCDAD1;
+  color: #fff;
 }
 
 .nav-link:hover {
@@ -238,16 +236,17 @@ nav ul {
 }
 
 .nav--login-span {
-  font-size: 18px;
+  font-size: 1.2rem;
 }
 
 .nav--logout {
   display: none;
-  font-size: 18px;
+  font-size: 1.2rem;
 }
 
 .nav--welcome {
-  margin-left: 15px;
+  margin-left: .8rem;
+  color: #EAF555;
 }
 
 /* RESULTS display */
@@ -260,12 +259,14 @@ nav ul {
   margin:0;
   top: 0;
   right: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(31, 198, 190, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
+  font-size: 1.3em;
 }
 
 .search-results {
@@ -287,25 +288,27 @@ nav ul {
   width: 500px;
   margin-top: 20px;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: 3px solid #0B3954;
-  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
-.search-results, .single-result {
+.result-container p {
+  z-index: 1;
+}
+
+.search-results {
     background: white; /* For browsers that do not support gradients */        
-    background: -webkit-linear-gradient(180deg, #0B3954, white); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(180deg, #0B3954, white); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(180deg, #0B3954, white); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(180deg, #0B3954, white);
+    background: -webkit-linear-gradient(180deg, #39004d, white); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(180deg, #39004d, white); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(180deg, #39004d, white); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(180deg, #39004d, white);
 }
 
 .reviewed-icon {
   position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
+  top: 2px;
+  right: 2px;
+  z-index: 0;
 }
 
 .staticImg {
@@ -337,7 +340,7 @@ nav ul {
 
 .single-result h1 {
   margin-top: 0px;
-  padding-top:30px;
+  padding-top: 30px;
   border-bottom: 1px solid white;
   color: white;
 }
@@ -348,8 +351,11 @@ nav ul {
 
 .js-single-result h4 {
   margin: 50px 0px 10px 0px;
-  font-size: 24px;
   color: white;
+}
+
+.recent-reviews {
+  background-color: white;
 }
 
 .recent-reviews ul {
@@ -368,9 +374,16 @@ nav ul {
   text-align: left;
   margin: 10px 0px;
   padding: 15px;
-  border: 1px solid white;
-  border-radius: 4px;
-  background-color: white;
+}
+
+.fa-quote-left {
+  margin-right: 10px;
+  font-size: 1.5rem;
+}
+
+.fa-quote-right {
+  margin-left: 10px;
+  font-size: 1.5rem;
 }
 
 .review-icon-container {
@@ -382,14 +395,19 @@ nav ul {
   align-items: center;
   flex-wrap: wrap;
   padding: 20px 0px;
+  background-color: white;
+}
+
+.review-icon-single {
+  padding: 5px 10px;
 }
 
 .review-icon-single p {
-  color: #0B0A07;
-  font-size: 16px;
   margin: 0;
-  border-top: 1px solid #700353;
-  color: #700353;
+  color: #8c00c2;
+  font-size: 1.2rem;
+  border-top: 1px solid #39004d;
+  letter-spacing: .3em;
 }
 
 .js-login-to-review {
@@ -397,26 +415,32 @@ nav ul {
 }
 
 .js-login-to-review:hover {
-  background-color: #700353;
+  background-color: #8c00c2;
   color: white;
+  border: 1px solid white;
 }
 
 
 /* QUESTIONNAIRE */
 .review-questionnaire {
-  margin-top: 50px;
-  border-top: 2px solid #0B0A07;
   width: 90%;
+  margin: 50px 0px;
+  color: black;
+  background-color: white;
+}
+
+.review-questionnaire fieldset {
+  margin: 0px 10px 20px 10px;
 }
 
 .review-answers {
-  border: 2px dashed #700353;
+  border: 2px dashed #8c00c2;
   text-align: center;
 }
 
 .review-answers legend {
-  font-size: 20px;
-  color: #700353;
+  font-size: 1.5rem;
+  color: #8c00c2;
 }
 
 .questionnaire-icon {
@@ -440,7 +464,7 @@ nav ul {
   margin-right: 40px;
   height: 40px;
   padding: 5px 10px;
-  border: 1px solid #0B0A07;
+  border: 1px solid #8c00c2;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -458,6 +482,54 @@ nav ul {
 .answer-button label {
   cursor: pointer;
 }
+
+.js-review-submit {
+  margin-bottom: 20px;
+}
+
+
+/* Tablets (portrait and landscape) */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1223px) {
+/* Styles */
+}
+
+/* Desktop and laptops */
+@media only screen  and (min-width : 1224px) {
+  main {
+    text-align: right;
+    padding: 30px 75px 100px 0px;
+  }
+
+  main h1 {
+    font-size: 5rem;
+  }
+
+  main h2 {
+    font-size: 1.5rem;
+  }
+  main p {
+    text-align: left;
+    margin: 20px 0px 0px 50px;
+    font-size: 1.2rem;
+  }
+  .login-buttons button, .button--new-user, .nav--registration-modal button, .js-login-to-review {
+    font-size: .8rem;
+  }
+  .fa-spin-container {
+    font-size: 1.5rem;
+  }
+  .js-single-result h4 {
+    font-size: 1.2rem;
+  }
+
+  #pac-input {
+    width: 450px;
+    margin: 50px 0px 50px 50px;
+    font-size: 18px;
+  }  
+}
+
+
 
 
 
