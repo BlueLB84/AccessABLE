@@ -13,6 +13,11 @@ const STATE = {
 
 // GOOGLE MAP autocomplete and geolocation bounds
 const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
+const PAGE_VIEWS = {
+	'home': $('.js-home'),
+	'search-results': $('.js-search-results'),
+	'single-result': $('.js-single-result-container'),
+};
 
 function initAutocomplete() {
 
@@ -41,7 +46,7 @@ function initAutocomplete() {
 			$("html, body").animate({ scrollTop: $('#js-snap-results').offset().top - 50}, 1000);
 		},
 	    method: 'GET',
-	    url: '/results',
+	    url: '/api/results',
 	    contentType: 'application/json',
 	    data: data,
 	    success : function(html) {
@@ -76,6 +81,28 @@ function initAutocomplete() {
 geolocate();
 }
 
+// window.onload = function(event) {
+// 	console.log(document.location.pathname);
+// 	let change = false;
+// 	STATE.place_ID = document.location.pathname.split('/')[2];
+// 	const currentRoute = getCurrentRoute();
+
+// 	// let pathnameLength = document.location.pathname.split('/').length;
+
+// 	// if(pathnameLength === 3) {
+// 	// 	STATE.route = 'single-result';
+// 	// }
+
+// 	if(currentRoute) {
+// 			STATE.route = currentRoute;
+// 			change = true;
+// 	}
+// 	if(change === true) {
+// 		renderAccessABLE(PAGE_VIEWS);
+// 	};
+// };
+
+
 window.onpopstate = function(event) {
 	let change = false;
 	const currentRoute = getCurrentRoute();
@@ -106,11 +133,6 @@ function getCurrentRoute() {
 	}
 }
 
-const PAGE_VIEWS = {
-	'home': $('.js-home'),
-	'search-results': $('.js-search-results'),
-	'single-result': $('.js-single-result-container'),
-};
 
 // RENDER PROJECT PAGE
 function renderAccessABLE(elements) {
@@ -152,7 +174,7 @@ function ajaxGetSingleResult(state) {
 
 	$.ajax({
 		    type: 'GET',
-		    url: `/results/${STATE.place_ID}`, 
+		    url: `/api/results/${STATE.place_ID}`, 
 		    success: function(html) {
 		    	if(state === 'push') {
 				historyPushState(`/results/${STATE.place_ID}`);
@@ -424,6 +446,10 @@ $('.js-registration-cancel').on('click', event => {
 
 
 $(document).ready(function() {
+	if(document.location.pathname.split('/').length === 3) {
+		STATE.place_ID = document.location.pathname.split('/')[2];
+	};
+	
 	renderAccessABLE(PAGE_VIEWS);
 	handleSingleResult();
 });
