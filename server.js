@@ -69,12 +69,7 @@ passport.deserializeUser(function(user, done) {
 app.use('/reviews', reviewsRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
-app.use('/results', resultsRouter);
-
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/public/index.html');
-	res.status(200);
-});
+app.use('/api/results', resultsRouter);
 
 app.get('/logout', function(req, res){
   req.logout();
@@ -82,8 +77,13 @@ app.get('/logout', function(req, res){
 });
 
 // catch all other routers
-app.use('*', function(req, res) {
-	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
+// app.use('*', function(req, res) {
+// 	res.status(404).json({message: 'Oops! Not found. You might be lost. Marco. Polo.'});
+// });
+
+app.get('*', (req, res) => {
+	res.sendFile(__dirname + '/public/index.html');
+	res.status(200);
 });
 
 let server;
