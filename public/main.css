@@ -289,7 +289,14 @@ nav ul {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  font-size: 1.2rem;
+  font-size: 1rem;
+}
+
+.fa-spin-container p {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  padding-top: 10px;
 }
 
 .search-results {
@@ -592,8 +599,8 @@ footer img {
   }
 
   .reviewed-icon {
-    top: 3px;
-    right: 3px;
+    bottom: 5px;
+    right: 5px;
   }
 }
 
@@ -684,7 +691,7 @@ footer img {
   }
 
   .reviewed-icon {
-    top: 5px;
+    bottom: 5px;
     right: 5px;
   } 
 
