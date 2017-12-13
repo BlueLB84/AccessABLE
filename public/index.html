@@ -82,13 +82,21 @@
 		
     <div class="js-home"></div>
 
-    <div class="search-results js-search-results" id="js-snap-results"></div>
+    <div class="search-results js-search-results" id="js-snap-results" aria-live="assertive"></div>
 
-    <div class="single-result js-single-result-container">
+    <div class="single-result js-single-result-container" aria-live="assertive">
       <div class="js-single-result"></div>
       <div class="js-review-login"><button type="button" class="js-login-to-review">Please LOG IN to review this business</button></div>
-      <div class="review-questionnaire js-review-questionnaire"></div>
-    </div>    
+      <div class="review-questionnaire js-review-questionnaire" aria-live="assertive"></div>
+    </div>
+
+    <footer role="contentinfo">
+      <div class="accessible">
+        <img src="../images/accessible_icon.svg" alt="accessibleicon.org icon" />
+        <p>ACCESSIBLE&nbsp;ICON&nbsp;by <a href="http://accessibleicon.org/" target="_blank">accessibleicon.org</a></p>
+      </div>
+        <p class="by-line">Lindsey Barbee-Vargas<br>on <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/bluelb84" target="_blank">Github</a></p>
+    </footer>    
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTSkR1xxnbH7JcdIl23wNP5TIl5DGpPkk&libraries=places&callback=initAutocomplete"
