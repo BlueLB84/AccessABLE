@@ -448,7 +448,7 @@ $('.js-registration-cancel').on('click', event => {
 // Footer scrolling
 var didScroll;
 var lastScrollBottom = 0;
-var delta = 5;
+var delta = 10;
 var footerHeight = $('footer').outerHeight();
 
 $(window).scroll(function(event){
