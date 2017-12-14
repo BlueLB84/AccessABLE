@@ -82,7 +82,7 @@ function getCurrentRoute() {
 		$('#pac-input').show();
 		$('#loading').hide();
 		return 'home';
-	} else if(document.location.pathname === `/results`) {
+	} else if(document.location.pathname.split('/').length === 2) {
 		$('#pac-input').show();
 		STATE.current_question = 0;
 		return 'search-results';
@@ -119,6 +119,8 @@ function historyPushState(route) {
 
 // Google AJAX call
 function googleQuery(queryData) {
+	console.log(queryData);
+
 	$.ajax({
 	    beforeSend: function() {
   			$('#loading').show();
@@ -132,10 +134,10 @@ function googleQuery(queryData) {
 	    contentType: 'application/json',
 	    data: queryData,
 	    success : function(html) {
-		    console.log('successful search');
+		    console.log(html);
 		    $('#pac-input').value = '';
 		    $('.js-search-results').html(html);
-		    let queryString = queryData.query.replace(',', '');
+		    let queryString = queryData.query.split(',').join('');
 		    STATE.query = queryString.split(' ').join('%20');
 		    STATE.lat = queryData.lat;
 		    STATE.lng = queryData.lng;

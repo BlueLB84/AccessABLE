@@ -13,7 +13,7 @@ html, body {
   font-family: 'Nunito', sans-serif;
   font-size: 16px;
   color: #0B0A07;
-  background-color: #39004d;
+  background-color: #F0F3F4; /* white */
 }
 
 /** Main / Landing View **/
@@ -23,8 +23,8 @@ main {
   text-align: center;
   padding-top: 30px;
   padding-bottom: 100px;
-  background-color: #39004d;
-  color: #EAF555;
+  background-color: #F0F3F4;
+  color: #39004d;  /* purple */
 }
 
 main img {
@@ -35,7 +35,7 @@ main img {
 main h1 {
   width: 90%;
   margin: 10px auto;
-  border-bottom: 1px solid #EAF555;
+  border-bottom: 2px solid #34495E;
   font-size: 3.5rem; 
 }
 
@@ -44,7 +44,7 @@ main h1:hover, main img:hover, .footer-icon:hover {
 }
 
 main h2 {
-  color: #fff;
+  color: #943B00;  /* orange */
   margin-bottom: 30px;
   font-size: 1rem;
 }
@@ -53,8 +53,8 @@ main p {
   width: 400px;
   margin: 20px auto 0px auto;
   padding-top: 5px;
-  color: #fff;
-  border-top: 1px solid #fff;
+  color: #943B00;
+  border-top: 2px solid #515D6C;
 }
 
 
@@ -108,7 +108,7 @@ main p {
 #pac-input {
   display: block;
   background-color: #fff;
-  border: 3px solid #CCDAD1;
+  border: 3px solid #515D6C;
   font-family: Roboto;
   font-size: 14px;
   font-weight: 300;
@@ -122,7 +122,7 @@ main p {
 #pac-input:focus {
   border: 5px solid #fff;
   outline: none !important;
-  box-shadow: 0 0 10px 10px #eaf555;
+  box-shadow: 0 0 4px 4px #eaf555;
 }
 
 #title {
@@ -145,13 +145,14 @@ main p {
   left: 10px;
   width: 90%;
   max-width: 400px;
-  background-color: #c6741f;
+  background-color: #943B00;
   padding: 15px 10px;
   z-index: 1;
 }
 
 .nav--login-modal h2 {
   text-align: center;
+  color: #F0F3F4;
 }
 
 .login-input, .registration-input {
@@ -164,7 +165,8 @@ main p {
 
 .login-input label {
   margin-top: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 2px;
+  color: #F0F3F4;
 }
 
 .login-input input {
@@ -185,7 +187,7 @@ main p {
 }
 
 .js-login-to-review {
-  background-color: white;
+  background-color: #F0F3F4;
 }
 
 .login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover, .js-review-submit:hover {
@@ -208,7 +210,7 @@ main p {
 #login-form-messages {
   text-align: center;
   margin-top: 5px;
-  color: white;
+  color: #F0F3F4;
 }
 
 /* REGISTRATION MODAL */
@@ -219,7 +221,7 @@ main p {
   left: 10px;
   width: 90%;
   max-width: 400px;
-  background-color: #1FC6BE;
+  background-color: #eaf555; /* yellow */
   color: #0B0A07;
   text-align: center;
   padding: 15px 10px;
@@ -253,7 +255,7 @@ main p {
 /* NAV LINKS */
 
 nav {
-  background-color: #39004d;
+  background-color: #F0F3F4;
 }
 nav ul {
   list-style-type: none;
@@ -265,15 +267,15 @@ nav ul {
 .nav-link {
   display: inline-block;
   cursor: pointer;
-  border-top: 1px solid #EAF555;
+  border-top: 1px solid #515D6C;
   width: 300px;
   margin-right: 10px;
-  color: #fff;
+  color: #943B00;
 }
 
 .nav-link:hover {
   border-top: none;
-  border-bottom: 1px solid #EAF555;
+  border-bottom: 2px solid #34495E;
 }
 
 .nav--login-span {
@@ -327,10 +329,10 @@ nav ul {
   margin-bottom: 45px;
   padding: 20px 0px;
   background: #fff; /* For browsers that do not support gradients */        
-  background: -webkit-linear-gradient(180deg, #39004d, #fff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(180deg, #39004d, #fff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(180deg, #39004d, #fff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(180deg, #39004d, #fff);
+  background: -webkit-linear-gradient(180deg, #F0F3F4, #39004d); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(180deg, #F0F3F4, #39004d); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(180deg, #F0F3F4, #39004d); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(180deg, #F0F3F4, #39004d);
 }
 
 .result-container {
@@ -572,15 +574,15 @@ footer {
     justify-content: space-around;
     align-items: center;
     flex-direction: row;
-    background-color: #EAF555;
-    color: black;
+    background-color: #943B00;  /* orange */
+    color: #FCFCFC;
     text-align: center;
     padding: 5px 0px 10px 0px;
-    box-shadow: 0px -5px 12px 1px #888850;
+    box-shadow: 0px -2px 20px 1px #943B00;
 }
 
 footer a {
-    color: #39004d;
+    color: #FCFCFC;
 }
 
 #accessible-icon {
