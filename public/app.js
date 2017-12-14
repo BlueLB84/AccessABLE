@@ -82,7 +82,7 @@ function getCurrentRoute() {
 		$('#pac-input').show();
 		$('#loading').hide();
 		return 'home';
-	} else if(`${document.location.pathname}${document.location.search}` === `/results?${STATE.query}&${STATE.lat},${STATE.lng}`) {
+	} else if(document.location.pathname === `/results`) {
 		$('#pac-input').show();
 		STATE.current_question = 0;
 		return 'search-results';
@@ -150,13 +150,13 @@ function googleQuery(queryData) {
 // Handle single location view
 function handleSingleResult() {
 	$('.js-search-results').on('keydown click', '.js-result-container', event => {
-	if(handleEventType(event)) {
-		event.preventDefault();
-		STATE.current_question = 0;
-		STATE.review_text = '';
-		STATE.place_ID = $(event.currentTarget).attr('id');
+		if(handleEventType(event)) {
+			event.preventDefault();
+			STATE.current_question = 0;
+			STATE.review_text = '';
+			STATE.place_ID = $(event.currentTarget).attr('id');
 
-		ajaxGetSingleResult('push');
+			ajaxGetSingleResult('push');
 		}
 	});
 };
@@ -254,8 +254,8 @@ function renderReviewQuestionnaire(index) {
         	<legend>${STATE.review_statements[index]}</legend>
         	<img src="${STATE.review_icons[STATE.current_question].src}" alt="${STATE.review_icons[STATE.current_question].alt}" class="questionnaire-icon" />
         	<ul class="questionnaire-radios">
-	        	<li><div class="js-answer-button answer-button review-true"><input type="radio" id="true${index}" value="true" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-true">YES</label></div></li>
-	        	<li><div class="js-answer-button answer-button review-false"><input type="radio" id="false${index}" value="false" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-false">NO</label></div></li>
+	        	<li><div class="js-answer-button answer-button review-true" tabindex="2"><input type="radio" id="true${index}" value="true" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-true">YES</label></div></li>
+	        	<li><div class="js-answer-button answer-button review-false" tabindex="3"><input type="radio" id="false${index}" value="false" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-false">NO</label></div></li>
         	</ul>
         </fieldset>
 	`;
@@ -275,18 +275,21 @@ $('.js-review-questionnaire').on('click', '.js-review-submit', event => {
 	handleReviewSubmit(STATE.place_ID);
 });
 
-$('.js-single-result-container').on('click', '.js-answer-button', event => {
-	event.preventDefault();
-	event.stopPropagation();
-	const reviewAnswer = $(event.currentTarget).parent().find('input[name="questionnaire-boolean"]').prop('checked', true).val();
-	STATE.review_answers.push(reviewAnswer);
-	STATE.current_question++;
-	nextReviewStatement();
+$('.js-single-result-container').on('keydown click', '.js-answer-button', event => {
+	if(handleEventType(event)) {
+		event.preventDefault();
+		event.stopPropagation();
+		const reviewAnswer = $(event.currentTarget).parent().find('input[name="questionnaire-boolean"]').prop('checked', true).val();
+		STATE.review_answers.push(reviewAnswer);
+		STATE.current_question++;
+		nextReviewStatement();
+	}
 });
 
 function nextReviewStatement() {
 	const reviewQuestion = reviewQuestionnaireTemplate(STATE.place_ID);
 	$('.js-review-questionnaire').html(reviewQuestion);
+	$('.js-review-questionnaire .review-true').focus();
 };
 
 function handleReviewSubmit(placeId) {
@@ -363,7 +366,7 @@ $('#js-form-login').on('submit', event => {
 	   },
 	   error: function (err){
 	   	console.log(err);
-	   	$('#login-form-messages').html(`<p>Incorrect username or password</p>`);
+	   	$('#login-form-messages').html(`<p>!! Incorrect username or password</p>`).alert();
 	   }
 	});
 });
@@ -371,13 +374,15 @@ $('#js-form-login').on('submit', event => {
 function onLogin(usrname, data) {
 	$('.js-login-cancel').click();
 	$('.js-nav-login').removeAttr('tabindex').hide();
-	$('.js-nav-logout').show();
-
+	$('.js-nav-logout').attr('tabindex', '1').show();
 	$('.js-nav-welcome').text(`Welcome ${usrname}`).show();
 	STATE.J_W_T = data.authToken;
 	STATE.I_L_I = true;
 	STATE.username = usrname;
 	reviewQuestionnaireLoggedIn();
+	if(STATE.route === 'single-result') {
+		$('.js-review-questionnaire .review-true').focus();
+	}
 }
 
 // Cancel login modal
@@ -386,8 +391,9 @@ $('.js-login-cancel').on('click', event => {
 });
 
 // AJAX call to logout
-$('.js-nav-logout').on('click', event => {
-	$.ajax({
+$('.js-nav-logout').on('keydown click', event => {
+	if(handleEventType(event)) {
+		$.ajax({
 	    type: 'GET',
 	    url: '/logout', 
 	    success: function() {
@@ -396,7 +402,8 @@ $('.js-nav-logout').on('click', event => {
 	   error: function (err){
 	   	console.log(err);
 	   }
-	});
+		});
+	}
 });
 
 function onLogout() {
@@ -406,7 +413,7 @@ function onLogout() {
 	STATE.review_answers = [];
 	$('.js-nav-logout').removeAttr('tabindex').hide();
 	$('.js-nav-welcome').hide();
-	$('.js-nav-login').show();
+	$('.js-nav-login').attr('tabindex', '1').show();
 	reviewQuestionnaireLoggedIn();
 };
 
