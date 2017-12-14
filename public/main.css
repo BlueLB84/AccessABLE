@@ -39,8 +39,12 @@ main h1 {
   font-size: 3.5rem; 
 }
 
+main h1:hover, main img:hover, .footer-icon:hover {
+  cursor: pointer;
+}
+
 main h2 {
-  color: white;
+  color: #fff;
   margin-bottom: 30px;
   font-size: 1rem;
 }
@@ -49,8 +53,8 @@ main p {
   width: 400px;
   margin: 20px auto 0px auto;
   padding-top: 5px;
-  color: white;
-  border-top: 1px solid white;
+  color: #fff;
+  border-top: 1px solid #fff;
 }
 
 
@@ -109,13 +113,14 @@ main p {
   font-size: 14px;
   font-weight: 300;
   margin: 30px auto 20px auto;
-  padding: 5px 11px 5px 13px;
+  padding: 5px;
   text-overflow: ellipsis;
-  width: 90%;
+  width: 95%;
+  max-width: 500px;
 }
 
 #pac-input:focus {
-  border: 5px solid white;
+  border: 5px solid #fff;
   outline: none !important;
   box-shadow: 0 0 10px 10px #eaf555;
 }
@@ -141,7 +146,7 @@ main p {
   width: 90%;
   max-width: 400px;
   background-color: #c6741f;
-  padding-bottom: 10px;
+  padding: 15px 10px;
   z-index: 1;
 }
 
@@ -176,21 +181,30 @@ main p {
   padding: 4px 8px;
   border: 1px solid #0B0A07;
   color: #0B0A07;
+  font-size: 0.8rem;
 }
 
 .login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover, .js-review-submit:hover {
+  border: 1px solid black;
   background-color: #eaf555;
+  color: black;
 }
 
 .nav--login-modal .button--login-submit, .nav--registration-modal .button--login-submit {
   margin-right: 10px;
   background-color: #39004d;
-  border: 1px solid white;
-  color: white;
+  border: 1px solid #fff;
+  color: #fff;
 }
 
 .button--new-user {
   margin-left: 10px;
+}
+
+#login-form-messages {
+  text-align: center;
+  margin-top: 5px;
+  color: white;
 }
 
 /* REGISTRATION MODAL */
@@ -204,7 +218,7 @@ main p {
   background-color: #1FC6BE;
   color: #0B0A07;
   text-align: center;
-  padding-bottom: 10px;
+  padding: 15px 10px;
   z-index: 1;
 }
 
@@ -288,7 +302,7 @@ nav ul {
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: #fff;
   font-size: 1rem;
 }
 
@@ -306,7 +320,13 @@ nav ul {
   justify-content: space-around;
   align-items: flex-start;
   flex-wrap: wrap;
+  margin-bottom: 45px;
   padding: 20px 0px;
+  background: #fff; /* For browsers that do not support gradients */        
+  background: -webkit-linear-gradient(180deg, #39004d, #fff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(180deg, #39004d, #fff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(180deg, #39004d, #fff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(180deg, #39004d, #fff);
 }
 
 .result-container {
@@ -318,8 +338,8 @@ nav ul {
   width: 90%;
   max-width: 500px;
   margin-top: 20px;
-  margin: 20px auto 0 auto;
-  padding: 10px;
+  margin: 20px 5px;
+  padding: 15px 10px;
   background-color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
@@ -328,14 +348,6 @@ nav ul {
   margin-bottom: 5px;
   z-index: 1;
   font-size: .8rem;
-}
-
-.search-results {
-    background: white; /* For browsers that do not support gradients */        
-    background: -webkit-linear-gradient(180deg, #39004d, white); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(180deg, #39004d, white); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(180deg, #39004d, white); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(180deg, #39004d, white);
 }
 
 .reviewed-icon {
@@ -350,7 +362,7 @@ nav ul {
 }
 
 .results-map {
-  border: 2px solid white;
+  border: 2px solid #fff;
   border-radius: 4px;
 }
 
@@ -359,6 +371,7 @@ nav ul {
   text-align: center;
   z-index: 1;
   font-size: 1.25rem;
+  padding-bottom: 15px;
 }
 
 /* Single Result View */
@@ -372,6 +385,7 @@ nav ul {
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin-bottom: 50px;
 }
 
 .single-result h1 {
@@ -379,22 +393,22 @@ nav ul {
   margin-bottom: 10px;
   padding-top: 30px;
   padding-bottom: 5px;
-  border-bottom: 1px solid white;
-  color: white;
+  border-bottom: 1px solid #fff;
+  color: #fff;
 }
 
 .js-single-result p {
   margin-bottom: 10px;
-  color: white;
+  color: #fff;
 }
 
 .js-single-result h4 {
   margin: 50px 0px 10px 0px;
-  color: white;
+  color: #fff;
 }
 
 .recent-reviews {
-  background-color: white;
+  background-color: #fff;
   padding: 10px;
 }
 
@@ -410,10 +424,10 @@ nav ul {
 
 .recent-reviews li {
   display: block;
-  width: 300px;
+  width: 350px;
   text-align: left;
-  margin: 10px 0px;
-  padding: 15px;
+  margin: 10px;
+  padding: 10px;
 }
 
 .fa-quote-left {
@@ -436,7 +450,7 @@ nav ul {
   flex-wrap: wrap;
   margin-top: 10px;
   padding: 20px 0px;
-  background-color: white;
+  background-color: #fff;
 }
 
 .review-icon-single {
@@ -457,8 +471,8 @@ nav ul {
 
 .js-login-to-review:hover {
   background-color: #8c00c2;
-  color: white;
-  border: 1px solid white;
+  color: #fff;
+  border: 1px solid #fff;
 }
 
 
@@ -466,13 +480,14 @@ nav ul {
 .review-questionnaire {
   width: 90%;
   margin: 50px auto;
-  padding: 10px;
+  padding: 0px 10px;
   color: black;
-  background-color: white;
+  background-color: #fff;
 }
 
 .review-questionnaire h2, .review-questionnaire p {
   margin-bottom: 10px;
+  padding-top: 10px;
 }
 
 .review-questionnaire fieldset {
@@ -488,7 +503,7 @@ nav ul {
 
 .review-answers legend {
   color: #8c00c2;
-  background-color: white;
+  background-color: #fff;
 }
 
 .questionnaire-icon {
@@ -532,6 +547,10 @@ nav ul {
   cursor: pointer;
 }
 
+#js-review-text {
+  margin-top: 10px;
+}
+
 .js-review-submit {
   margin-bottom: 20px;
 }
@@ -552,17 +571,25 @@ footer {
     background-color: #EAF555;
     color: black;
     text-align: center;
-    padding: 0px 5px;
+    padding: 5px 0px 10px 0px;
+    box-shadow: 0px -5px 12px 1px #888850;
 }
 
 footer a {
     color: #39004d;
 }
 
-footer img {
+#accessible-icon {
   display: block;
   width: 30px;
   height: 30px;
+}
+
+.footer-icon {
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
 }
 
 .accessible {
@@ -583,7 +610,7 @@ footer img {
 }
 
 .footer-down {
-  bottom: -35px;
+  bottom: -60px;
 }
 
 .footer-up {
@@ -596,6 +623,7 @@ footer img {
 @media only screen and (min-device-width : 768px) and (max-device-width : 1223px) {
   #pac-input {
     width: 75%;
+    max-width: 500px;
   }
 
   .reviewed-icon {
@@ -634,10 +662,10 @@ footer img {
     width: 300px;
     margin-right: 30px;
   }
-
-  .login-buttons button, .button--new-user, .nav--registration-modal button, .js-login-to-review {
-    font-size: .8rem;
+  .search-results {
+    margin-bottom: 70px;  
   }
+
   .fa-spin-container {
     font-size: 1.5rem;
   }
@@ -645,12 +673,16 @@ footer img {
     font-size: 1.2rem;
   }
 
+  .single-result {
+    margin-bottom: 75px;
+  }
+
   .result-container p {
     font-size: 1rem;
   }
 
   #pac-input {
-    width: 450px;
+    width: 500px;
     margin: 50px 0px 50px 50px;
     font-size: 18px;
   }
@@ -709,11 +741,15 @@ footer img {
     font-size: 1rem;
   }
 
-  footer img {
-    display: block;
+  #accessible-icon {
     width: 50px;
     height: 50px;
-}
+  }
+
+  .footer-icon {
+    width: 75px;
+    height: 75px;
+  }
 
   .by-line, .accessible p {
     width: 200px;
@@ -721,11 +757,11 @@ footer img {
   }
 
   .footer-down {
-  bottom: -60px;
+    bottom: -85px;
   }
 
-.footer-up {
-  bottom: 0px;
+  .footer-up {
+    bottom: 0px;
   }
 }
 

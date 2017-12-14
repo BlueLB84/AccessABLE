@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="fa-events-icons-ready" style="background-color: ##39004d;">
+<html class="fa-events-icons-ready" style="background-color: ##39004d;"  lang="en">
   <head>
     <title>accessABLE</title>
     <meta name="viewport" content="initial-scale=1.0">
@@ -11,8 +11,8 @@
   <body>
     <nav>
   		<ul>
-        <li class="nav-link nav--login js-nav-login"><span class="nav--login-span">LOG IN</span> to review a business</li>
-        <li class="nav-link nav--logout js-nav-logout">LOG OUT<span class="nav--welcome js-nav-welcome"></span></li>
+        <li class="nav-link nav--login js-nav-login" tabindex="2"><span class="nav--login-span">LOG IN</span> to review a business</li>
+        <li class="nav-link nav--logout js-nav-logout" tabindex="-1">LOG OUT<span class="nav--welcome js-nav-welcome"></span></li>
       </ul>
       
       
@@ -72,10 +72,11 @@
     </div>
     
     <main role="main">
-			<h1>accessABLE</h1>
+			<h1 tabindex="0" title="accessABLE HOME" id="main-title">accessABLE</h1>
 			<h2>Review the accessibility of local businesses</h2>
-      <img src="../images/accessABLE_icon.svg" alt="accessABLE icon" />
-      <input id="pac-input" class="controls" type="text" placeholder='Search for a Business and Location. ex: "pizza near Boston"' autofocus disabled="disabled">
+      <img src="../images/accessABLE_icon.svg" alt="accessABLE icon" tabindex="0" title="accessABLE HOME" id="main-icon"/>
+      <label for="pac-input" hidden aria-hidden="false">Search Google for a business:</label>
+      <input id="pac-input" class="controls" type="text" placeholder='Search for a Business and Location. ex: "pizza near Boston, MA"' autofocus disabled="disabled" tabindex="1">
 			<p>Search. Review. Become an accessALLY. </p>
       
 		</main>
@@ -92,10 +93,11 @@
 
     <footer role="contentinfo" class="footer-down">
       <div class="accessible">
-        <img src="../images/accessible_icon.svg" alt="accessibleicon.org icon" />
-        <p>ACCESSIBLE&nbsp;ICON&nbsp;by <a href="http://accessibleicon.org/" target="_blank">accessibleicon.org</a></p>
+        <img src="../images/accessible_icon.svg" alt="accessibleicon.org icon" id="accessible-icon"/>
+        <p>ACCESSIBLE&nbsp;ICON&nbsp;by <a href="http://accessibleicon.org/" target="_blank" tabindex="0">accessibleicon.org</a></p>
       </div>
-        <p class="by-line">Lindsey Barbee-Vargas<br>on <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/bluelb84" target="_blank">Github</a></p>
+      <img src="../images/accessABLE_icon_small.svg" alt="accessABLE icon small, black" class="footer-icon" tabindex="0" />
+      <p class="by-line">Lindsey Barbee-Vargas<br>on <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/bluelb84" target="_blank" tabindex="0">Github</a></p>
     </footer>    
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
