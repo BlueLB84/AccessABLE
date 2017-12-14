@@ -4,6 +4,9 @@ const STATE = {
 	review_answers: [],
 	review_text: '',
 	current_question: 0,
+	query: null,
+	lat: null,
+	lng: null,
 	place_ID: null,
 	route: 'home',
 	I_L_I: false,
@@ -37,27 +40,7 @@ function initAutocomplete() {
   		data.lng = center.lng();
   	};
 
-	$.ajax({
-	    beforeSend: function() {
-  			$('#loading').show();
-		},
-		complete: function() {
-			$('#loading').hide();
-			$("html, body").animate({ scrollTop: $('#js-snap-results').offset().top - 50}, 1000);
-		},
-	    method: 'GET',
-	    url: '/api/results',
-	    contentType: 'application/json',
-	    data: data,
-	    success : function(html) {
-		    input.value = '';
-		    $('.js-search-results').html(html);
-		    historyPushState('results');
-	    },
-	    error: function (err){
-	   	console.log(err);
-	   }
-	});
+	googleQuery(data);
   });
 
   function geolocate() {
@@ -81,28 +64,6 @@ function initAutocomplete() {
 geolocate();
 }
 
-// window.onload = function(event) {
-// 	console.log(document.location.pathname);
-// 	let change = false;
-// 	STATE.place_ID = document.location.pathname.split('/')[2];
-// 	const currentRoute = getCurrentRoute();
-
-// 	// let pathnameLength = document.location.pathname.split('/').length;
-
-// 	// if(pathnameLength === 3) {
-// 	// 	STATE.route = 'single-result';
-// 	// }
-
-// 	if(currentRoute) {
-// 			STATE.route = currentRoute;
-// 			change = true;
-// 	}
-// 	if(change === true) {
-// 		renderAccessABLE(PAGE_VIEWS);
-// 	};
-// };
-
-
 window.onpopstate = function(event) {
 	let change = false;
 	const currentRoute = getCurrentRoute();
@@ -121,7 +82,7 @@ function getCurrentRoute() {
 		$('#pac-input').show();
 		$('#loading').hide();
 		return 'home';
-	} else if(document.location.pathname === '/results') {
+	} else if(`${document.location.pathname}${document.location.search}` === `/results?${STATE.query}&${STATE.lat},${STATE.lng}`) {
 		$('#pac-input').show();
 		STATE.current_question = 0;
 		return 'search-results';
@@ -133,11 +94,17 @@ function getCurrentRoute() {
 	}
 }
 
+function handleEventType (event) {
+	if(event.type === 'click' || event.which == 13 || event.which == 32) {
+        return true;
+    }
+    return false;
+}
+
 
 // RENDER PROJECT PAGE
 function renderAccessABLE(elements) {
 	const currentRoute = getCurrentRoute();
-
 	Object.keys(elements).forEach(function(route) {
 		elements[route].hide();
 	});
@@ -150,15 +117,47 @@ function historyPushState(route) {
 	renderAccessABLE(PAGE_VIEWS);
 }
 
+// Google AJAX call
+function googleQuery(queryData) {
+	$.ajax({
+	    beforeSend: function() {
+  			$('#loading').show();
+		},
+		complete: function() {
+			$('#loading').hide();
+			$("html, body").animate({ scrollTop: $('#js-snap-results').offset().top - 50}, 1000);
+		},
+	    method: 'GET',
+	    url: '/api/results',
+	    contentType: 'application/json',
+	    data: queryData,
+	    success : function(html) {
+		    console.log('successful search');
+		    $('#pac-input').value = '';
+		    $('.js-search-results').html(html);
+		    let queryString = queryData.query.replace(',', '');
+		    STATE.query = queryString.split(' ').join('%20');
+		    STATE.lat = queryData.lat;
+		    STATE.lng = queryData.lng;
+		    historyPushState(`results?${STATE.query}&${STATE.lat},${STATE.lng}`);
+	    },
+	    error: function (err){
+	   	console.log(err);
+	   }
+	});
+};
+
 // Handle single location view
 function handleSingleResult() {
-	$('.js-search-results').on('click', '.js-result-container', event => {
-	event.preventDefault();
-	STATE.current_question = 0;
-	STATE.review_text = '';
-	STATE.place_ID = $(event.currentTarget).attr('id');
+	$('.js-search-results').on('keydown click', '.js-result-container', event => {
+	if(handleEventType(event)) {
+		event.preventDefault();
+		STATE.current_question = 0;
+		STATE.review_text = '';
+		STATE.place_ID = $(event.currentTarget).attr('id');
 
-	ajaxGetSingleResult('push');
+		ajaxGetSingleResult('push');
+		}
 	});
 };
 
@@ -167,7 +166,7 @@ function ajaxGetSingleResult(state) {
 	function checkILI() {
 		if(STATE.I_L_I) {
 			$('.js-review-questionnaire').html(reviewQuestionnaireTemplate(STATE.place_ID)).show();
-		} else if(STATE.I_L_I) {
+		} else if(!STATE.I_L_I) {
 			$('.js-review-login').show();
 		}
 	}
@@ -175,6 +174,9 @@ function ajaxGetSingleResult(state) {
 	$.ajax({
 		    type: 'GET',
 		    url: `/api/results/${STATE.place_ID}`, 
+		    complete: function() {
+				$('#loading').hide();
+			},
 		    success: function(html) {
 		    	if(state === 'push') {
 				historyPushState(`/results/${STATE.place_ID}`);
@@ -185,6 +187,9 @@ function ajaxGetSingleResult(state) {
 					history.replaceState({}, null, `/results/${STATE.place_ID}`);
 					renderAccessABLE(PAGE_VIEWS);
 					removeReviewSuccess();
+					if(STATE.direct === true) {
+						$('.nav--login').hide();
+					}
 				}
 		      
 		    	$('.js-single-result').html(html);
@@ -326,6 +331,7 @@ function handleReviewSubmit(placeId) {
 function resetReviewSTATE() {
 	STATE.review_answers = [];
 	STATE.review_text = '';
+	STATE.current_question= 0;
 }
 
 function removeReviewSuccess() {
@@ -333,9 +339,12 @@ function removeReviewSuccess() {
 };
 
 // Launch login modal
-$('nav').on('click', '.js-nav-login', event => {
-	$('.js-login-modal').show();
-	$('#username-log').focus();
+$('nav').on('keydown click', '.js-nav-login', event => {
+	if(handleEventType(event)) {
+		event.preventDefault();
+		$('.js-login-modal').show();
+		$('#username-log').focus();
+	}
 });
 
 // AJAX call to login
@@ -361,8 +370,9 @@ $('#js-form-login').on('submit', event => {
 
 function onLogin(usrname, data) {
 	$('.js-login-cancel').click();
-	$('.js-nav-login').hide();
+	$('.js-nav-login').removeAttr('tabindex').hide();
 	$('.js-nav-logout').show();
+
 	$('.js-nav-welcome').text(`Welcome ${usrname}`).show();
 	STATE.J_W_T = data.authToken;
 	STATE.I_L_I = true;
@@ -394,7 +404,7 @@ function onLogout() {
 	STATE.J_W_T = null;
 	STATE.username = null;
 	STATE.review_answers = [];
-	$('.js-nav-logout').hide();
+	$('.js-nav-logout').removeAttr('tabindex').hide();
 	$('.js-nav-welcome').hide();
 	$('.js-nav-login').show();
 	reviewQuestionnaireLoggedIn();
@@ -444,8 +454,25 @@ $('.js-registration-cancel').on('click', event => {
 	$('.js-registration-modal').hide();
 });
 
+// Return to Home Page 
+$('main, footer').on('keydown click', '#main-title, #main-icon, .footer-icon', event => {
+	if(handleEventType(event)) {
+		$.ajax({
+	    type: 'GET',
+	    url: '/',
+	    contentType: 'application/json', 
+	    success: function() {
+	      historyPushState('/');
+		},
+		error: function (err){
+			console.log(err);
+		}
+		});
+	}
+});
 
-// Footer scrolling
+
+//   Footer scrolling  //
 var didScroll;
 var lastScrollBottom = 0;
 var delta = 10;
@@ -465,17 +492,13 @@ setInterval(function() {
 function hasScrolled() {
     var st = $(this).scrollTop();
     
-    // Make sure they scroll more than delta
     if(Math.abs(lastScrollBottom - st) <= delta)
         return;
     
-    // If they scrolled down and are past the navbar, add class .nav-up.
-    // This is necessary so you never see what is "behind" the navbar.
     if (st > lastScrollBottom && st > footerHeight){
-        // Scroll Down
         $('footer').removeClass('footer-down').addClass('footer-up');
     } else {
-        // Scroll Up
+
         if(st + $(window).height() < $(document).height()) {
             $('footer').removeClass('footer-down').addClass('footer-up');
         }
@@ -486,9 +509,27 @@ function hasScrolled() {
 
 
 $(document).ready(function() {
+	if(`${document.location.pathname}${document.location.search}`.split('?').length === 2) {
+		let docLocSearch = document.location.search.split('?')[1].split('&');
+		STATE.query = docLocSearch[0].split(',').join('').split('%20').join(' ');;
+		STATE.lat = docLocSearch[1].split(',')[0];
+		STATE.lng = docLocSearch[1].split(',')[1];
+		
+		const data = {
+			query: STATE.query,
+			lat: STATE.lat,
+			lng: STATE.lng
+		};
+
+		googleQuery(data);
+	};
 	if(document.location.pathname.split('/').length === 3) {
 		STATE.place_ID = document.location.pathname.split('/')[2];
+		STATE.route = 'single-result';
+		STATE.direct = true;
+		ajaxGetSingleResult('push');
 	};
+
 	
 	renderAccessABLE(PAGE_VIEWS);
 	handleSingleResult();
