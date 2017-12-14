@@ -254,8 +254,8 @@ function renderReviewQuestionnaire(index) {
         	<legend>${STATE.review_statements[index]}</legend>
         	<img src="${STATE.review_icons[STATE.current_question].src}" alt="${STATE.review_icons[STATE.current_question].alt}" class="questionnaire-icon" />
         	<ul class="questionnaire-radios">
-	        	<li><div class="js-answer-button answer-button review-true" tabindex="2"><input type="radio" id="true${index}" value="true" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-true">YES</label></div></li>
-	        	<li><div class="js-answer-button answer-button review-false" tabindex="3"><input type="radio" id="false${index}" value="false" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-false">NO</label></div></li>
+	        	<li><div class="js-answer-button answer-button review-true" tabindex="0"><input type="radio" id="true${index}" value="true" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-true">YES</label></div></li>
+	        	<li><div class="js-answer-button answer-button review-false" tabindex="0"><input type="radio" id="false${index}" value="false" name="questionnaire-boolean" class="questionnaire-boolean" required hidden/><label for="${index}-false">NO</label></div></li>
         	</ul>
         </fieldset>
 	`;
@@ -374,7 +374,7 @@ $('#js-form-login').on('submit', event => {
 function onLogin(usrname, data) {
 	$('.js-login-cancel').click();
 	$('.js-nav-login').removeAttr('tabindex').hide();
-	$('.js-nav-logout').attr('tabindex', '1').show();
+	$('.js-nav-logout').attr('tabindex', '0').show();
 	$('.js-nav-welcome').text(`Welcome ${usrname}`).show();
 	STATE.J_W_T = data.authToken;
 	STATE.I_L_I = true;
@@ -413,7 +413,7 @@ function onLogout() {
 	STATE.review_answers = [];
 	$('.js-nav-logout').removeAttr('tabindex').hide();
 	$('.js-nav-welcome').hide();
-	$('.js-nav-login').attr('tabindex', '1').show();
+	$('.js-nav-login').attr('tabindex', '0').show();
 	reviewQuestionnaireLoggedIn();
 };
 
