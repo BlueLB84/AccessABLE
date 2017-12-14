@@ -184,6 +184,10 @@ main p {
   font-size: 0.8rem;
 }
 
+.js-login-to-review {
+  background-color: white;
+}
+
 .login-buttons button:hover, .button--new-user:hover, .nav--registration-modal button:hover, .js-login-to-review:hover, .js-review-submit:hover {
   border: 1px solid black;
   background-color: #eaf555;
@@ -385,7 +389,7 @@ nav ul {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-bottom: 50px;
+  padding-bottom: 100px;
 }
 
 .single-result h1 {
@@ -590,6 +594,7 @@ footer a {
   width: 50px;
   height: 50px;
   margin-bottom: 10px;
+  padding-left: 10px;
 }
 
 .accessible {
