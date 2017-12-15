@@ -266,7 +266,7 @@ function renderReviewQuestionnaire(index) {
 function renderReviewTextArea() {
 	return `
 			<fieldset class="review-answers" id="review-textarea">
-				<textarea id="js-review-text" form="review-questionnaire-form" placeholder="Enter text here..." cols="70" autofocus></textarea>
+				<textarea id="js-review-text" form="review-questionnaire-form" placeholder="Enter text here..." rows="10" cols="50" autofocus></textarea>
 			</fieldset>
 			<button type="button" class="js-review-submit">SUBMIT</button>
 		`;

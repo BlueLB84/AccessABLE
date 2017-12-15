@@ -511,8 +511,9 @@ nav ul {
 }
 
 .review-questionnaire fieldset {
-  margin: 0px 10px 20px 10px;
+  margin: 10px auto 20px auto;
   width: 90%;
+  max-width: 650px;
   padding-bottom: 10px;
 }
 
