@@ -10,7 +10,7 @@
 ## Overview ##
 **accessABLE** is a full stack web application that allows users to search for a business or establishment using the Google Places API. After a general or specific search, the user is able to select a single business in order to see the business's accessibilty reviews and ratings. In order to review a business, a user can register for access to *accessABLE* (using [passportjs.org](http://www.passportjs.org/ "Passport")). After initial registration, the user is able to log in with their username and password and review a business.  A review consists of answering YES or NO to six accessibility statements.  The user is also able to enter a text review before submitting their review.  
 
-### Technology Stack ###
+## Technology Stack ##
 *  Front-end technologies
     +  HTML, CSS, JavaScript, jQuery, JSON
 *  Server technologies
@@ -20,7 +20,7 @@
 * Additional Tools
     +  Google Fonts, Font Awesome, Flexbox
 
-### Icons ###
+## Icons ##
 I would like to credit [The Accessible Icon Project](http://accessibleicon.org/ "The Accessible Icon Project") for the following icon that I used throughout this project: ![accessible icon](dev_images/accessible_icon_lg.png "accessible icon")
 
 I created the following svg icons through [Vectr.com](https://vectr.com/ "Vectr"):
@@ -35,7 +35,7 @@ I created the following svg icons through [Vectr.com](https://vectr.com/ "Vectr"
 ![bathroom icon](public/images/bathroom_icon.svg "bathroom icon")
 ![service animal icon](public/images/service_dog_icon.svg "service animal icon")
 
-### Desktop View Examples ###
+## Desktop View Examples ##
 ![accessABLE login](dev_images/desktop_login.png "accessABLE login")  
 *login*
 * * *
@@ -54,7 +54,7 @@ I created the following svg icons through [Vectr.com](https://vectr.com/ "Vectr"
 ![accessABLE review textbox](dev_images/desktop_review_textbox.png "accessABLE review textbox")  
 *review textbox*
 
-### Mobile View Examples ###
+## Mobile View Examples ##
 ![accessABLE mobile home](/dev_images/mobile_home.jpg "accessABLE mobile home")  
 *home*
 * * *
