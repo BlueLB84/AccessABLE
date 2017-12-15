@@ -367,9 +367,10 @@ nav ul {
 
 .reviewed-icon {
   position: absolute;
-  bottom: 3px;
+  top: 3px;
   right: 3px;
   z-index: 0;
+  width: 30px;
 }
 
 .staticImg {
@@ -652,8 +653,9 @@ footer a {
   }
 
   .reviewed-icon {
-    bottom: 5px;
+    top: 5px;
     right: 5px;
+    width: 40px;
   }
 
   footer {
@@ -756,8 +758,9 @@ footer a {
   }
 
   .reviewed-icon {
-    bottom: 5px;
+    top: 5px;
     right: 5px;
+    width: 50px;
   }
 
   .js-single-result p {
