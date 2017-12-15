@@ -641,8 +641,49 @@ footer a {
   bottom: 0px;
 }
 
+
+/* Extra-small devices */
+
+@media screen and (max-device-width : 359px) {
+  main h1 {
+    font-size: 2rem;
+  }
+
+  main h2 {
+    font-size: .8rem;
+  }
+
+  main img {
+    width: 200px;
+  }
+
+  footer {
+    font-size: .65rem;
+  }
+
+  .footer-icon {
+    display: none;
+  }
+
+  #accessible-icon {
+    width: 25px;
+  }
+
+  .single-result h1, .review-questionnaire h2 {
+    font-size: 1.2rem;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+  } 
+
+
+
+}
+
+
 /* Tablets (portrait and landscape) */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1223px) {
+@media screen and (min-device-width : 768px) and (max-device-width : 1223px) {
   #pac-input {
     width: 75%;
     max-width: 500px;
@@ -664,7 +705,7 @@ footer a {
 }
 
 /* Desktop and laptops */
-@media only screen  and (min-device-width : 1224px) {
+@media screen and (min-device-width : 1224px) {
   body, html {
     padding-bottom: 60px;
   }
