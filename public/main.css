@@ -469,14 +469,13 @@ nav ul {
 }
 
 .review-icon-single {
-  padding: 5px 10px;
+  padding: 10px;
 }
 
 .review-icon-single p {
   margin: 0;
   color: #8c00c2;
   font-size: 1.2rem;
-  border-top: 1px solid #39004d;
   letter-spacing: .3em;
 }
 
