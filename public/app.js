@@ -12,7 +12,7 @@ const STATE = {
 	I_L_I: false,
 	J_W_T: null,
 	username: null
-}
+};
 
 // GOOGLE MAP autocomplete and geolocation bounds
 const GOOGLE_STATIC_MAP_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&maptype=roadmap&zoom=14&key=AIzaSyCPxCKyI-0Jt2BLFhjrLK112M2N_M8qHSQ&markers=color:blue&markers=';
@@ -62,7 +62,7 @@ function initAutocomplete() {
 	  	}
 	  } 
 geolocate();
-}
+};
 
 window.onpopstate = function(event) {
 	let change = false;
@@ -92,15 +92,14 @@ function getCurrentRoute() {
 	} else {
 		return null;
 	}
-}
+};
 
 function handleEventType (event) {
 	if(event.type === 'click' || event.which == 13 || event.which == 32) {
         return true;
     }
     return false;
-}
-
+};
 
 // RENDER PROJECT PAGE
 function renderAccessABLE(elements) {
@@ -115,11 +114,10 @@ function renderAccessABLE(elements) {
 function historyPushState(route) {
 	history.pushState({}, null, route);
 	renderAccessABLE(PAGE_VIEWS);
-}
+};
 
 // Google AJAX call
 function googleQuery(queryData) {
-	console.log(queryData);
 
 	$.ajax({
 	    beforeSend: function() {
@@ -134,7 +132,6 @@ function googleQuery(queryData) {
 	    contentType: 'application/json',
 	    data: queryData,
 	    success : function(html) {
-		    console.log(html);
 		    $('#pac-input').value = '';
 		    $('.js-search-results').html(html);
 		    let queryString = queryData.query.split(',').join('');
@@ -201,7 +198,7 @@ function ajaxGetSingleResult(state) {
 		   		console.log(err);
 		    }
 		});
-}
+};
 
 // LOGIN in order to Review the business
 $('.js-review-login').on('click', '.js-login-to-review', event => {
@@ -240,7 +237,6 @@ function reviewQuestionnaireTemplate(placeId) {
 		${reviewBlocks}
 	</form>`;
 };
-
 
 function displayReviewQuestionnaire() {
 	let reviewBlocks = [];
@@ -385,7 +381,7 @@ function onLogin(usrname, data) {
 	if(STATE.route === 'single-result') {
 		$('.js-review-questionnaire .review-true').focus();
 	}
-}
+};
 
 // Cancel login modal
 $('.js-login-cancel').on('click', event => {
@@ -480,7 +476,6 @@ $('main, footer').on('keydown click', '#main-title, #main-icon, .footer-icon', e
 	}
 });
 
-
 //   Footer scrolling  //
 var didScroll;
 var lastScrollBottom = 0;
@@ -514,8 +509,7 @@ function hasScrolled() {
     }
     
     lastScrollTop = st;
-}
-
+};
 
 $(document).ready(function() {
 	if(`${document.location.pathname}${document.location.search}`.split('?').length === 2) {
@@ -539,15 +533,6 @@ $(document).ready(function() {
 		ajaxGetSingleResult('push');
 	};
 
-	
 	renderAccessABLE(PAGE_VIEWS);
 	handleSingleResult();
 });
-
-
-
-
-
-
-
-

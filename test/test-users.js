@@ -12,8 +12,6 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-/// SEED DATA GENERATION AND DB INSERTION ///
-
 function seedUserData() {
 	console.info('seeding user data');
 	const seedData = [];
@@ -21,7 +19,7 @@ function seedUserData() {
 	for(let i=1; i<=5; i++) {
 		seedData.push(generateUserData());
 	}
-	return User.insertMany(seedData); // returns a promise
+	return User.insertMany(seedData);
 }
 
 function generateUserData() {
@@ -35,14 +33,12 @@ function generateUserData() {
 	}
 }
 
-// delete db after each test
 function tearDownDb() {
 	console.warn('Deleting database');
 	return mongoose.connection.dropDatabase();
 }
 
 /// TESTS ///
-
 describe('Users API resource', function() {
 	before(function() {
 		return runServer(TEST_DATABASE_URL);
@@ -60,7 +56,6 @@ describe('Users API resource', function() {
 		return closeServer();
 	});
 
-	
 	//  /users/:id GET
 	describe('users GET endpoint', function() {
 
@@ -93,8 +88,7 @@ describe('Users API resource', function() {
 
 					res.body.should.include.keys(
 						'userId', 'username', 'firstName', 'lastName', 'userBio');
-				});
-					
+				});	
 		});
 	});
 

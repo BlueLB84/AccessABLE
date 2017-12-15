@@ -12,8 +12,6 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-/// SEED DATA GENERATION AND DB INSERTION ///
-
 function seedReviewData() {
 	console.info('seeding review data');
 	const seedData = [];
@@ -21,7 +19,7 @@ function seedReviewData() {
 	for(let i=1; i<=5; i++) {
 		seedData.push(generateReviewData());
 	}
-	return Review.insertMany(seedData); // returns a promise
+	return Review.insertMany(seedData);
 }
 
 function generateBusinessId() {
@@ -49,7 +47,6 @@ function generateReviewData() {
 	}
 }
 
-// delete db after each test
 function tearDownDb() {
 	console.warn('Deleting database');
 	return mongoose.connection.dropDatabase();
