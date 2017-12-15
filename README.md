@@ -4,7 +4,7 @@
 
 [accessable.herokuapp.com](https://accessable.herokuapp.com "accessABLE")
 
-![accessABLE Home](dev_images/desktop_home.PNG "accessABLE Home")
+![accessABLE Home](dev_images/desktop_home.png "accessABLE Home")
 
 
 ## Overview ##
@@ -22,8 +22,8 @@
 
 
 ### Desktop View Examples ###
-![accessABLE login](../../master/dev_images/desktop_login.PNG "accessABLE login")
-![accessABLE user registration](/dev_images/desktop_user_reg.PNG "accessABLE user registration")
+![accessABLE login](../../master/dev_images/desktop_login.png "accessABLE login")
+![accessABLE user registration](/dev_images/desktop_user_reg.png "accessABLE user registration")
 ![accessABLE search results](/dev_images/desktop_results.PNG "accessABLE search results")
 ![accessABLE single result](/dev_images/desktop_single_result.PNG "accessABLE single result")
 ![accessABLE review](/dev_images/desktop_review.PNG "accessABLE review")
