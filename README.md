@@ -22,23 +22,33 @@
 
 
 ### Desktop View Examples ###
-![accessABLE login](dev_images/desktop_login.png "accessABLE login") *login*
+![accessABLE login](dev_images/desktop_login.png "accessABLE login")
+*login*
 * * *
-![accessABLE user registration](dev_images/desktop_user_reg.png "accessABLE user registration") *user registration*  
+![accessABLE user registration](dev_images/desktop_user_reg.png "accessABLE user registration")
+*user registration*
 * * *
-![accessABLE search results](dev_images/desktop_results.png "accessABLE search results") *search results*  
+![accessABLE search results](dev_images/desktop_results.png "accessABLE search results")
+*search results*
 * * *
-![accessABLE single result](dev_images/desktop_single_result.png "accessABLE single result") *single result*  
+![accessABLE single result](dev_images/desktop_single_result.png "accessABLE single result")
+*single result*
 * * *
-![accessABLE review](dev_images/desktop_review.png "accessABLE review") *review*  
+![accessABLE review](dev_images/desktop_review.png "accessABLE review")
+*review*
 * * *
-![accessABLE review textbox](dev_images/desktop_review_textbox.png "accessABLE review textbox") *review textbox*  
+![accessABLE review textbox](dev_images/desktop_review_textbox.png "accessABLE review textbox")
+*review textbox*
 
 ### Mobile View Examples ###
-![accessABLE mobile home](/dev_images/mobile_home.jpg "accessABLE mobile home") *home* 
+![accessABLE mobile home](/dev_images/mobile_home.jpg "accessABLE mobile home")
+*home*
 * * *
-![accessABLE mobile search results](/dev_images/mobile_results.jpg "accessABLE mobile search results") *search results*  
+![accessABLE mobile search results](/dev_images/mobile_results.jpg "accessABLE mobile search results")
+*search results*
 * * *
-![accessABLE mobile review percentages](/dev_images/mobile_review_percentages.jpg "accessABLE mobile review percentages") *review icons and percentages*  
+![accessABLE mobile review percentages](/dev_images/mobile_review_percentages.jpg "accessABLE mobile review percentages")
+*review icons and percentages*
 * * *
-![accessABLE mobile review submit](/dev_images/mobile_review_submit.jpg "accessABLE mobile review submit") *review submit*
+![accessABLE mobile review submit](/dev_images/mobile_review_submit.jpg "accessABLE mobile review submit")
+*review submit*
