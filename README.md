@@ -22,7 +22,7 @@
 
 
 ### Desktop View Examples ###
-![accessABLE login](../dev_images/desktop_login.PNG "accessABLE login")
+![accessABLE login](../../dev_images/desktop_login.PNG "accessABLE login")
 ![accessABLE user registration](/dev_images/desktop_user_reg.PNG "accessABLE user registration")
 ![accessABLE search results](/dev_images/desktop_results.PNG "accessABLE search results")
 ![accessABLE single result](/dev_images/desktop_single_result.PNG "accessABLE single result")
