@@ -24,8 +24,10 @@
 I would like to credit [The Accessible Icon Project](http://accessibleicon.org/ "The Accessible Icon Project") for the following icon that I used throughout this project: ![accessible icon](dev_images/accessible_icon_lg.png "accessible icon")
 
 I created the following svg icons through [Vectr.com](https://vectr.com/ "Vectr"):
+* * *
 ![accessABLE icon](public/images/accessABLE_icon.svg "accessABLE icon")
 ![small accessABLE icon](public/images/accessABLE_icon_small.svg "accessABLE icon")
+* * *
 ![parking icon](public/images/parking_icon.svg "parking icon")
 ![entrance icon](public/images/enter_exit_icon.svg "entrance icon")
 ![interior navigation icon](public/images/interior_navigation.svg "interior navigation")
